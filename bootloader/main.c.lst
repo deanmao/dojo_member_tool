@@ -1,0 +1,1527 @@
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 1
+
+
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  10               		.text
+  11               		.type	eeprom_write_byte, @function
+  12               	eeprom_write_byte:
+  13               	/* prologue: function */
+  14               	/* frame size = 0 */
+  15 0000 9C01      		movw r18,r24
+  16               	.L2:
+  17 0002 E199      		sbic 60-32,1
+  18 0004 00C0      		rjmp .L2
+  19 0006 1CBA      		out 60-32,__zero_reg__
+  20 0008 3FBB      		out (62)+1-32,r19
+  21 000a 2EBB      		out 62-32,r18
+  22 000c 6DBB      		out 61-32,r22
+  23               	/* #APP */
+  24               	 ;  324 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.
+  25               		/* START EEPROM WRITE CRITICAL SECTION */
+  26 000e 0FB6      		in	r0, 63		
+  27 0010 F894      		cli				
+  28 0012 E29A      		sbi	28, 2	
+  29 0014 E19A      		sbi	28, 1	
+  30 0016 0FBE      		out	63, r0		
+  31               		/* END EEPROM WRITE CRITICAL SECTION */
+  32               	 ;  0 "" 2
+  33               	/* epilogue start */
+  34               	/* #NOAPP */
+  35 0018 0895      		ret
+  36               		.size	eeprom_write_byte, .-eeprom_write_byte
+  37               	.global	SoftI2cMasterInit
+  38               		.type	SoftI2cMasterInit, @function
+  39               	SoftI2cMasterInit:
+  40               	/* prologue: function */
+  41               	/* frame size = 0 */
+  42 001a B99A      		sbi 55-32,1
+  43 001c C19A      		sbi 56-32,1
+  44 001e BA9A      		sbi 55-32,2
+  45 0020 C29A      		sbi 56-32,2
+  46               	/* epilogue start */
+  47 0022 0895      		ret
+  48               		.size	SoftI2cMasterInit, .-SoftI2cMasterInit
+  49               	.global	SoftI2cMasterDeInit
+  50               		.type	SoftI2cMasterDeInit, @function
+  51               	SoftI2cMasterDeInit:
+  52               	/* prologue: function */
+  53               	/* frame size = 0 */
+  54 0024 C198      		cbi 56-32,1
+  55 0026 B998      		cbi 55-32,1
+  56 0028 C298      		cbi 56-32,2
+  57 002a BA98      		cbi 55-32,2
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 2
+
+
+  58               	/* epilogue start */
+  59 002c 0895      		ret
+  60               		.size	SoftI2cMasterDeInit, .-SoftI2cMasterDeInit
+  61               	.global	SoftI2cMasterRead
+  62               		.type	SoftI2cMasterRead, @function
+  63               	SoftI2cMasterRead:
+  64               	/* prologue: function */
+  65               	/* frame size = 0 */
+  66 002e 382F      		mov r19,r24
+  67 0030 C19A      		sbi 56-32,1
+  68 0032 B998      		cbi 55-32,1
+  69 0034 80E0      		ldi r24,lo8(0)
+  70 0036 20E0      		ldi r18,lo8(0)
+  71               	.L10:
+  72 0038 880F      		lsl r24
+  73 003a 96E1      		ldi r25,lo8(22)
+  74               	/* #APP */
+  75               	 ;  83 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.3
+  76 003c 9A95      		1: dec r25
+  77 003e 01F4      		brne 1b
+  78               	 ;  0 "" 2
+  79               	/* #NOAPP */
+  80 0040 C29A      		sbi 56-32,2
+  81 0042 B199      		sbic 54-32,1
+  82 0044 8160      		ori r24,lo8(1)
+  83               	.L9:
+  84 0046 C298      		cbi 56-32,2
+  85 0048 2F5F      		subi r18,lo8(-(1))
+  86 004a 2830      		cpi r18,lo8(8)
+  87 004c 01F4      		brne .L10
+  88 004e B99A      		sbi 55-32,1
+  89 0050 3323      		tst r19
+  90 0052 01F0      		breq .L11
+  91 0054 C19A      		sbi 56-32,1
+  92 0056 00C0      		rjmp .L12
+  93               	.L11:
+  94 0058 C198      		cbi 56-32,1
+  95               	.L12:
+  96 005a C29A      		sbi 56-32,2
+  97 005c 96E1      		ldi r25,lo8(22)
+  98               	/* #APP */
+  99               	 ;  83 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.3
+ 100 005e 9A95      		1: dec r25
+ 101 0060 01F4      		brne 1b
+ 102               	 ;  0 "" 2
+ 103               	/* #NOAPP */
+ 104 0062 C298      		cbi 56-32,2
+ 105 0064 C198      		cbi 56-32,1
+ 106               	/* epilogue start */
+ 107 0066 0895      		ret
+ 108               		.size	SoftI2cMasterRead, .-SoftI2cMasterRead
+ 109               	.global	SoftI2cMasterWrite
+ 110               		.type	SoftI2cMasterWrite, @function
+ 111               	SoftI2cMasterWrite:
+ 112               	/* prologue: function */
+ 113               	/* frame size = 0 */
+ 114 0068 482F      		mov r20,r24
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 3
+
+
+ 115 006a 90E8      		ldi r25,lo8(-128)
+ 116 006c 20E0      		ldi r18,lo8(0)
+ 117 006e 30E0      		ldi r19,hi8(0)
+ 118               	.L17:
+ 119 0070 892F      		mov r24,r25
+ 120 0072 8423      		and r24,r20
+ 121 0074 01F0      		breq .L15
+ 122 0076 C19A      		sbi 56-32,1
+ 123 0078 00C0      		rjmp .L16
+ 124               	.L15:
+ 125 007a C198      		cbi 56-32,1
+ 126               	.L16:
+ 127 007c C29A      		sbi 56-32,2
+ 128 007e 86E1      		ldi r24,lo8(22)
+ 129               	/* #APP */
+ 130               	 ;  83 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.3
+ 131 0080 8A95      		1: dec r24
+ 132 0082 01F4      		brne 1b
+ 133               	 ;  0 "" 2
+ 134               	/* #NOAPP */
+ 135 0084 C298      		cbi 56-32,2
+ 136 0086 9695      		lsr r25
+ 137 0088 2F5F      		subi r18,lo8(-(1))
+ 138 008a 3F4F      		sbci r19,hi8(-(1))
+ 139 008c 2830      		cpi r18,8
+ 140 008e 3105      		cpc r19,__zero_reg__
+ 141 0090 01F4      		brne .L17
+ 142 0092 B998      		cbi 55-32,1
+ 143 0094 C19A      		sbi 56-32,1
+ 144 0096 C29A      		sbi 56-32,2
+ 145 0098 86B3      		in r24,54-32
+ 146 009a C298      		cbi 56-32,2
+ 147 009c B99A      		sbi 55-32,1
+ 148 009e C198      		cbi 56-32,1
+ 149 00a0 8695      		lsr r24
+ 150 00a2 8095      		com r24
+ 151 00a4 8170      		andi r24,lo8(1)
+ 152               	/* epilogue start */
+ 153 00a6 0895      		ret
+ 154               		.size	SoftI2cMasterWrite, .-SoftI2cMasterWrite
+ 155               	.global	SoftI2cMasterStart
+ 156               		.type	SoftI2cMasterStart, @function
+ 157               	SoftI2cMasterStart:
+ 158               	/* prologue: function */
+ 159               	/* frame size = 0 */
+ 160 00a8 C198      		cbi 56-32,1
+ 161 00aa 96E1      		ldi r25,lo8(22)
+ 162               	/* #APP */
+ 163               	 ;  83 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.3
+ 164 00ac 9A95      		1: dec r25
+ 165 00ae 01F4      		brne 1b
+ 166               	 ;  0 "" 2
+ 167               	/* #NOAPP */
+ 168 00b0 C298      		cbi 56-32,2
+ 169 00b2 00D0      		rcall SoftI2cMasterWrite
+ 170               	/* epilogue start */
+ 171 00b4 0895      		ret
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 4
+
+
+ 172               		.size	SoftI2cMasterStart, .-SoftI2cMasterStart
+ 173               	.global	SoftI2cMasterRestart
+ 174               		.type	SoftI2cMasterRestart, @function
+ 175               	SoftI2cMasterRestart:
+ 176               	/* prologue: function */
+ 177               	/* frame size = 0 */
+ 178 00b6 C19A      		sbi 56-32,1
+ 179 00b8 C29A      		sbi 56-32,2
+ 180 00ba 96E1      		ldi r25,lo8(22)
+ 181               	/* #APP */
+ 182               	 ;  83 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.3
+ 183 00bc 9A95      		1: dec r25
+ 184 00be 01F4      		brne 1b
+ 185               	 ;  0 "" 2
+ 186               	/* #NOAPP */
+ 187 00c0 00D0      		rcall SoftI2cMasterStart
+ 188               	/* epilogue start */
+ 189 00c2 0895      		ret
+ 190               		.size	SoftI2cMasterRestart, .-SoftI2cMasterRestart
+ 191               	.global	SoftI2cMasterStop
+ 192               		.type	SoftI2cMasterStop, @function
+ 193               	SoftI2cMasterStop:
+ 194               	/* prologue: function */
+ 195               	/* frame size = 0 */
+ 196 00c4 C198      		cbi 56-32,1
+ 197 00c6 86E1      		ldi r24,lo8(22)
+ 198 00c8 982F      		mov r25,r24
+ 199               	/* #APP */
+ 200               	 ;  83 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.3
+ 201 00ca 9A95      		1: dec r25
+ 202 00cc 01F4      		brne 1b
+ 203               	 ;  0 "" 2
+ 204               	/* #NOAPP */
+ 205 00ce C29A      		sbi 56-32,2
+ 206 00d0 982F      		mov r25,r24
+ 207               	/* #APP */
+ 208               	 ;  83 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.3
+ 209 00d2 9A95      		1: dec r25
+ 210 00d4 01F4      		brne 1b
+ 211               	 ;  0 "" 2
+ 212               	/* #NOAPP */
+ 213 00d6 C19A      		sbi 56-32,1
+ 214               	/* #APP */
+ 215               	 ;  83 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.3
+ 216 00d8 8A95      		1: dec r24
+ 217 00da 01F4      		brne 1b
+ 218               	 ;  0 "" 2
+ 219               	/* epilogue start */
+ 220               	/* #NOAPP */
+ 221 00dc 0895      		ret
+ 222               		.size	SoftI2cMasterStop, .-SoftI2cMasterStop
+ 223               	.global	soft_i2c_eeprom_write_bytes
+ 224               		.type	soft_i2c_eeprom_write_bytes, @function
+ 225               	soft_i2c_eeprom_write_bytes:
+ 226 00de DF92      		push r13
+ 227 00e0 EF92      		push r14
+ 228 00e2 FF92      		push r15
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 5
+
+
+ 229 00e4 0F93      		push r16
+ 230 00e6 1F93      		push r17
+ 231 00e8 CF93      		push r28
+ 232 00ea DF93      		push r29
+ 233               	/* prologue: function */
+ 234               	/* frame size = 0 */
+ 235 00ec F62E      		mov r15,r22
+ 236 00ee 172F      		mov r17,r23
+ 237 00f0 E42E      		mov r14,r20
+ 238 00f2 D52E      		mov r13,r21
+ 239 00f4 880F      		lsl r24
+ 240 00f6 00D0      		rcall SoftI2cMasterStart
+ 241 00f8 8823      		tst r24
+ 242 00fa 01F0      		breq .L26
+ 243 00fc 812F      		mov r24,r17
+ 244 00fe 00D0      		rcall SoftI2cMasterWrite
+ 245 0100 8823      		tst r24
+ 246 0102 01F0      		breq .L26
+ 247 0104 8F2D      		mov r24,r15
+ 248 0106 00D0      		rcall SoftI2cMasterWrite
+ 249 0108 8823      		tst r24
+ 250 010a 01F0      		breq .L26
+ 251 010c 8E2D      		mov r24,r14
+ 252 010e 9D2D      		mov r25,r13
+ 253 0110 9C01      		movw r18,r24
+ 254 0112 E901      		movw r28,r18
+ 255 0114 10E0      		ldi r17,lo8(0)
+ 256 0116 00C0      		rjmp .L27
+ 257               	.L28:
+ 258 0118 8991      		ld r24,Y+
+ 259 011a 00D0      		rcall SoftI2cMasterWrite
+ 260 011c 1F5F      		subi r17,lo8(-(1))
+ 261               	.L27:
+ 262 011e 1017      		cp r17,r16
+ 263 0120 00F0      		brlo .L28
+ 264 0122 00D0      		rcall SoftI2cMasterStop
+ 265 0124 81E0      		ldi r24,lo8(1)
+ 266 0126 00C0      		rjmp .L29
+ 267               	.L26:
+ 268 0128 80E0      		ldi r24,lo8(0)
+ 269               	.L29:
+ 270               	/* epilogue start */
+ 271 012a DF91      		pop r29
+ 272 012c CF91      		pop r28
+ 273 012e 1F91      		pop r17
+ 274 0130 0F91      		pop r16
+ 275 0132 FF90      		pop r15
+ 276 0134 EF90      		pop r14
+ 277 0136 DF90      		pop r13
+ 278 0138 0895      		ret
+ 279               		.size	soft_i2c_eeprom_write_bytes, .-soft_i2c_eeprom_write_bytes
+ 280               	.global	soft_i2c_eeprom_erase
+ 281               		.type	soft_i2c_eeprom_erase, @function
+ 282               	soft_i2c_eeprom_erase:
+ 283 013a FF92      		push r15
+ 284 013c 0F93      		push r16
+ 285 013e 1F93      		push r17
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 6
+
+
+ 286 0140 CF93      		push r28
+ 287 0142 DF93      		push r29
+ 288               	/* prologue: function */
+ 289               	/* frame size = 0 */
+ 290 0144 8B01      		movw r16,r22
+ 291 0146 F42E      		mov r15,r20
+ 292 0148 880F      		lsl r24
+ 293 014a 00D0      		rcall SoftI2cMasterStart
+ 294 014c 8823      		tst r24
+ 295 014e 01F0      		breq .L32
+ 296 0150 812F      		mov r24,r17
+ 297 0152 00D0      		rcall SoftI2cMasterWrite
+ 298 0154 8823      		tst r24
+ 299 0156 01F0      		breq .L32
+ 300 0158 802F      		mov r24,r16
+ 301 015a 00D0      		rcall SoftI2cMasterWrite
+ 302 015c 8823      		tst r24
+ 303 015e 01F0      		breq .L32
+ 304 0160 C0E0      		ldi r28,lo8(0)
+ 305 0162 D0E0      		ldi r29,hi8(0)
+ 306 0164 00C0      		rjmp .L33
+ 307               	.L34:
+ 308 0166 9E01      		movw r18,r28
+ 309 0168 2F5B      		subi r18,lo8(-(65))
+ 310 016a 822F      		mov r24,r18
+ 311 016c 00D0      		rcall SoftI2cMasterWrite
+ 312 016e 8091 0000 		lds r24,something
+ 313 0172 9091 0000 		lds r25,(something)+1
+ 314 0176 0196      		adiw r24,1
+ 315 0178 9093 0000 		sts (something)+1,r25
+ 316 017c 8093 0000 		sts something,r24
+ 317 0180 2196      		adiw r28,1
+ 318               	.L33:
+ 319 0182 8F2D      		mov r24,r15
+ 320 0184 90E0      		ldi r25,lo8(0)
+ 321 0186 C817      		cp r28,r24
+ 322 0188 D907      		cpc r29,r25
+ 323 018a 00F0      		brlo .L34
+ 324 018c 00D0      		rcall SoftI2cMasterStop
+ 325 018e 81E0      		ldi r24,lo8(1)
+ 326 0190 00C0      		rjmp .L35
+ 327               	.L32:
+ 328 0192 80E0      		ldi r24,lo8(0)
+ 329               	.L35:
+ 330               	/* epilogue start */
+ 331 0194 DF91      		pop r29
+ 332 0196 CF91      		pop r28
+ 333 0198 1F91      		pop r17
+ 334 019a 0F91      		pop r16
+ 335 019c FF90      		pop r15
+ 336 019e 0895      		ret
+ 337               		.size	soft_i2c_eeprom_erase, .-soft_i2c_eeprom_erase
+ 338               	.global	soft_i2c_eeprom_read_bytes
+ 339               		.type	soft_i2c_eeprom_read_bytes, @function
+ 340               	soft_i2c_eeprom_read_bytes:
+ 341 01a0 CF92      		push r12
+ 342 01a2 DF92      		push r13
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 7
+
+
+ 343 01a4 EF92      		push r14
+ 344 01a6 FF92      		push r15
+ 345 01a8 0F93      		push r16
+ 346 01aa 1F93      		push r17
+ 347 01ac CF93      		push r28
+ 348 01ae DF93      		push r29
+ 349               	/* prologue: function */
+ 350               	/* frame size = 0 */
+ 351 01b0 182F      		mov r17,r24
+ 352 01b2 F62E      		mov r15,r22
+ 353 01b4 072F      		mov r16,r23
+ 354 01b6 E42E      		mov r14,r20
+ 355 01b8 D52E      		mov r13,r21
+ 356 01ba C22E      		mov r12,r18
+ 357 01bc 880F      		lsl r24
+ 358 01be 00D0      		rcall SoftI2cMasterStart
+ 359 01c0 8823      		tst r24
+ 360 01c2 01F0      		breq .L38
+ 361 01c4 802F      		mov r24,r16
+ 362 01c6 00D0      		rcall SoftI2cMasterWrite
+ 363 01c8 8823      		tst r24
+ 364 01ca 01F0      		breq .L38
+ 365 01cc 8F2D      		mov r24,r15
+ 366 01ce 00D0      		rcall SoftI2cMasterWrite
+ 367 01d0 8823      		tst r24
+ 368 01d2 01F0      		breq .L38
+ 369 01d4 110F      		lsl r17
+ 370 01d6 812F      		mov r24,r17
+ 371 01d8 8160      		ori r24,lo8(1)
+ 372 01da 00D0      		rcall SoftI2cMasterRestart
+ 373 01dc 8823      		tst r24
+ 374 01de 01F0      		breq .L38
+ 375 01e0 8E2D      		mov r24,r14
+ 376 01e2 9D2D      		mov r25,r13
+ 377 01e4 9C01      		movw r18,r24
+ 378 01e6 E901      		movw r28,r18
+ 379 01e8 10E0      		ldi r17,lo8(0)
+ 380 01ea 00C0      		rjmp .L39
+ 381               	.L41:
+ 382 01ec 40E0      		ldi r20,lo8(0)
+ 383 01ee 212F      		mov r18,r17
+ 384 01f0 30E0      		ldi r19,lo8(0)
+ 385 01f2 8C2D      		mov r24,r12
+ 386 01f4 90E0      		ldi r25,lo8(0)
+ 387 01f6 0197      		sbiw r24,1
+ 388 01f8 2817      		cp r18,r24
+ 389 01fa 3907      		cpc r19,r25
+ 390 01fc 01F4      		brne .L40
+ 391 01fe 41E0      		ldi r20,lo8(1)
+ 392               	.L40:
+ 393 0200 842F      		mov r24,r20
+ 394 0202 00D0      		rcall SoftI2cMasterRead
+ 395 0204 8993      		st Y+,r24
+ 396 0206 1F5F      		subi r17,lo8(-(1))
+ 397               	.L39:
+ 398 0208 1C15      		cp r17,r12
+ 399 020a 00F0      		brlo .L41
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 8
+
+
+ 400 020c 00D0      		rcall SoftI2cMasterStop
+ 401 020e 81E0      		ldi r24,lo8(1)
+ 402 0210 00C0      		rjmp .L42
+ 403               	.L38:
+ 404 0212 80E0      		ldi r24,lo8(0)
+ 405               	.L42:
+ 406               	/* epilogue start */
+ 407 0214 DF91      		pop r29
+ 408 0216 CF91      		pop r28
+ 409 0218 1F91      		pop r17
+ 410 021a 0F91      		pop r16
+ 411 021c FF90      		pop r15
+ 412 021e EF90      		pop r14
+ 413 0220 DF90      		pop r13
+ 414 0222 CF90      		pop r12
+ 415 0224 0895      		ret
+ 416               		.size	soft_i2c_eeprom_read_bytes, .-soft_i2c_eeprom_read_bytes
+ 417               		.type	writeFlashPage, @function
+ 418               	writeFlashPage:
+ 419               	/* prologue: function */
+ 420               	/* frame size = 0 */
+ 421 0226 81E0      		ldi r24,lo8(1)
+ 422 0228 8093 0000 		sts didWriteSomething,r24
+ 423               	/* #APP */
+ 424               	 ;  172 "main.c" 1
+ 425 022c F894      		cli
+ 426               	 ;  0 "" 2
+ 427               	/* #NOAPP */
+ 428 022e E091 0000 		lds r30,currentAddress
+ 429 0232 F091 0000 		lds r31,(currentAddress)+1
+ 430 0236 3297      		sbiw r30,2
+ 431 0238 85E0      		ldi r24,lo8(5)
+ 432               	/* #APP */
+ 433               	 ;  173 "main.c" 1
+ 434 023a 8093 5700 		sts 87, r24
+ 435 023e E895      		spm
+ 436               		
+ 437               	 ;  0 "" 2
+ 438               	/* #NOAPP */
+ 439               	.L45:
+ 440 0240 07B6      		in __tmp_reg__,87-32
+ 441 0242 00FC      		sbrc __tmp_reg__,0
+ 442 0244 00C0      		rjmp .L45
+ 443               	/* #APP */
+ 444               	 ;  175 "main.c" 1
+ 445 0246 7894      		sei
+ 446               	 ;  0 "" 2
+ 447               	/* epilogue start */
+ 448               	/* #NOAPP */
+ 449 0248 0895      		ret
+ 450               		.size	writeFlashPage, .-writeFlashPage
+ 451               		.type	writeWordToPageBuffer, @function
+ 452               	writeWordToPageBuffer:
+ 453               	/* prologue: function */
+ 454               	/* frame size = 0 */
+ 455 024a 9C01      		movw r18,r24
+ 456 024c E091 0000 		lds r30,currentAddress
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 9
+
+
+ 457 0250 F091 0000 		lds r31,(currentAddress)+1
+ 458 0254 3097      		sbiw r30,0
+ 459 0256 01F0      		breq .L48
+ 460 0258 E430      		cpi r30,4
+ 461 025a F105      		cpc r31,__zero_reg__
+ 462 025c 01F0      		breq .L49
+ 463 025e 82E1      		ldi r24,hi8(4860)
+ 464 0260 EC3F      		cpi r30,lo8(4860)
+ 465 0262 F807      		cpc r31,r24
+ 466 0264 01F4      		brne .L50
+ 467 0266 2091 0000 		lds r18,vectorTemp
+ 468 026a 3091 0000 		lds r19,(vectorTemp)+1
+ 469 026e 2E57      		subi r18,lo8(-(1666))
+ 470 0270 394F      		sbci r19,hi8(-(1666))
+ 471 0272 00C0      		rjmp .L51
+ 472               	.L50:
+ 473 0274 82E1      		ldi r24,hi8(4862)
+ 474 0276 EE3F      		cpi r30,lo8(4862)
+ 475 0278 F807      		cpc r31,r24
+ 476 027a 01F4      		brne .L51
+ 477 027c 2091 0000 		lds r18,vectorTemp+2
+ 478 0280 3091 0000 		lds r19,(vectorTemp+2)+1
+ 479 0284 2D57      		subi r18,lo8(-(1667))
+ 480 0286 394F      		sbci r19,hi8(-(1667))
+ 481 0288 00C0      		rjmp .L51
+ 482               	.L49:
+ 483 028a 2FE7      		ldi r18,lo8(-13953)
+ 484 028c 39EC      		ldi r19,hi8(-13953)
+ 485               	.L51:
+ 486               	/* #APP */
+ 487               	 ;  215 "main.c" 1
+ 488 028e F894      		cli
+ 489               	 ;  0 "" 2
+ 490               	/* #NOAPP */
+ 491 0290 81E0      		ldi r24,lo8(1)
+ 492               	/* #APP */
+ 493               	 ;  216 "main.c" 1
+ 494 0292 0901      		movw  r0, r18
+ 495 0294 8093 5700 		sts 87, r24
+ 496 0298 E895      		spm
+ 497 029a 1124      		clr  r1
+ 498               		
+ 499               	 ;  0 "" 2
+ 500               	 ;  217 "main.c" 1
+ 501 029c 7894      		sei
+ 502               	 ;  0 "" 2
+ 503               	/* #NOAPP */
+ 504 029e 3296      		adiw r30,2
+ 505 02a0 F093 0000 		sts (currentAddress)+1,r31
+ 506 02a4 E093 0000 		sts currentAddress,r30
+ 507               	/* epilogue start */
+ 508 02a8 0895      		ret
+ 509               	.L48:
+ 510 02aa 81E1      		ldi r24,lo8(17)
+ 511               	/* #APP */
+ 512               	 ;  213 "main.c" 1
+ 513 02ac 8093 5700 		sts 87, r24
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 10
+
+
+ 514 02b0 E895      		spm
+ 515               		
+ 516               	 ;  0 "" 2
+ 517               	/* #NOAPP */
+ 518 02b2 00C0      		rjmp .L49
+ 519               		.size	writeWordToPageBuffer, .-writeWordToPageBuffer
+ 520               		.type	fillFlashWithVectors, @function
+ 521               	fillFlashWithVectors:
+ 522               	/* prologue: function */
+ 523               	/* frame size = 0 */
+ 524               	.L54:
+ 525 02b4 8FEF      		ldi r24,lo8(-1)
+ 526 02b6 9FEF      		ldi r25,hi8(-1)
+ 527 02b8 00D0      		rcall writeWordToPageBuffer
+ 528 02ba 8091 0000 		lds r24,currentAddress
+ 529 02be 9091 0000 		lds r25,(currentAddress)+1
+ 530 02c2 8F73      		andi r24,lo8(63)
+ 531 02c4 9070      		andi r25,hi8(63)
+ 532 02c6 892B      		or r24,r25
+ 533 02c8 01F4      		brne .L54
+ 534 02ca 00D0      		rcall writeFlashPage
+ 535               	/* epilogue start */
+ 536 02cc 0895      		ret
+ 537               		.size	fillFlashWithVectors, .-fillFlashWithVectors
+ 538               		.section	.init3,"ax",@progbits
+ 539               	.global	PushMagicWord
+ 540               		.type	PushMagicWord, @function
+ 541               	PushMagicWord:
+ 542               	/* prologue: naked */
+ 543               	/* frame size = 0 */
+ 544               	/* #APP */
+ 545               	 ;  387 "main.c" 1
+ 546 0000 00EB      		ldi r16, 0xB0
+ 547               	 ;  0 "" 2
+ 548               	 ;  388 "main.c" 1
+ 549 0002 0F93      		push r16
+ 550               	 ;  0 "" 2
+ 551               	 ;  389 "main.c" 1
+ 552 0004 07E0      		ldi r16, 0x07
+ 553               	 ;  0 "" 2
+ 554               	 ;  390 "main.c" 1
+ 555 0006 0F93      		push r16
+ 556               	 ;  0 "" 2
+ 557               	/* epilogue start */
+ 558               	/* #NOAPP */
+ 559               		.size	PushMagicWord, .-PushMagicWord
+ 560               		.text
+ 561               		.type	writeEeprom, @function
+ 562               	writeEeprom:
+ 563 02ce 0F93      		push r16
+ 564 02d0 1F93      		push r17
+ 565 02d2 DF93      		push r29
+ 566 02d4 CF93      		push r28
+ 567 02d6 00D0      		rcall .
+ 568 02d8 CDB7      		in r28,__SP_L__
+ 569 02da DEB7      		in r29,__SP_H__
+ 570               	/* prologue: function */
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 11
+
+
+ 571               	/* frame size = 2 */
+ 572 02dc 182F      		mov r17,r24
+ 573 02de 8AE0      		ldi r24,lo8(10)
+ 574 02e0 90E0      		ldi r25,hi8(10)
+ 575 02e2 9A83      		std Y+2,r25
+ 576 02e4 8983      		std Y+1,r24
+ 577 02e6 6091 0000 		lds r22,eepromAddress
+ 578 02ea 7091 0000 		lds r23,(eepromAddress)+1
+ 579 02ee 2091 0000 		lds r18,writeBufferIndex
+ 580 02f2 3091 0000 		lds r19,(writeBufferIndex)+1
+ 581 02f6 80E5      		ldi r24,lo8(80)
+ 582 02f8 40E0      		ldi r20,lo8(writeBuffer)
+ 583 02fa 50E0      		ldi r21,hi8(writeBuffer)
+ 584 02fc 012F      		mov r16,r17
+ 585 02fe 00D0      		rcall soft_i2c_eeprom_write_bytes
+ 586 0300 6091 0000 		lds r22,eepromAddress
+ 587 0304 7091 0000 		lds r23,(eepromAddress)+1
+ 588 0308 610F      		add r22,r17
+ 589 030a 711D      		adc r23,__zero_reg__
+ 590 030c 7093 0000 		sts (eepromAddress)+1,r23
+ 591 0310 6093 0000 		sts eepromAddress,r22
+ 592 0314 CE01      		movw r24,r28
+ 593 0316 0196      		adiw r24,1
+ 594 0318 40E0      		ldi r20,lo8(gs(eeprom_write_byte))
+ 595 031a 50E0      		ldi r21,hi8(gs(eeprom_write_byte))
+ 596 031c 00D0      		rcall __eewr_word
+ 597               	/* epilogue start */
+ 598 031e 0F90      		pop __tmp_reg__
+ 599 0320 0F90      		pop __tmp_reg__
+ 600 0322 CF91      		pop r28
+ 601 0324 DF91      		pop r29
+ 602 0326 1F91      		pop r17
+ 603 0328 0F91      		pop r16
+ 604 032a 0895      		ret
+ 605               		.size	writeEeprom, .-writeEeprom
+ 606               	.global	main
+ 607               		.type	main, @function
+ 608               	main:
+ 609 032c DF93      		push r29
+ 610 032e CF93      		push r28
+ 611 0330 00D0      		rcall .
+ 612 0332 0F92      		push __tmp_reg__
+ 613 0334 CDB7      		in r28,__SP_L__
+ 614 0336 DEB7      		in r29,__SP_H__
+ 615               	/* prologue: function */
+ 616               	/* frame size = 3 */
+ 617 0338 D1B6      		in r13,81-32
+ 618 033a 88E1      		ldi r24,lo8(24)
+ 619               	/* #APP */
+ 620               	 ;  468 "main.c" 1
+ 621 033c 0FB6      		in __tmp_reg__, __SREG__
+ 622 033e F894      		cli
+ 623 0340 81BD      		out 33, r24
+ 624 0342 11BC      		out 33, __zero_reg__
+ 625 0344 0FBE      		out __SREG__,__tmp_reg__
+ 626               		
+ 627               	 ;  0 "" 2
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 12
+
+
+ 628               	/* #NOAPP */
+ 629 0346 E0E0      		ldi r30,lo8(0)
+ 630 0348 F0E0      		ldi r31,hi8(0)
+ 631               	/* #APP */
+ 632               	 ;  408 "main.c" 1
+ 633 034a 8591      		lpm r24, Z+
+ 634 034c 9491      		lpm r25, Z
+ 635               		
+ 636               	 ;  0 "" 2
+ 637               	/* #NOAPP */
+ 638 034e 8F57      		subi r24,lo8(-13953)
+ 639 0350 994C      		sbci r25,hi8(-13953)
+ 640 0352 01F4      		brne .L61
+ 641 0354 E4E0      		ldi r30,lo8(4)
+ 642 0356 F0E0      		ldi r31,hi8(4)
+ 643               	/* #APP */
+ 644               	 ;  409 "main.c" 1
+ 645 0358 8591      		lpm r24, Z+
+ 646 035a 9491      		lpm r25, Z
+ 647               		
+ 648               	 ;  0 "" 2
+ 649               	/* #NOAPP */
+ 650 035c 8F57      		subi r24,lo8(-13953)
+ 651 035e 994C      		sbci r25,hi8(-13953)
+ 652 0360 01F0      		breq .L62
+ 653               	.L61:
+ 654 0362 00D0      		rcall fillFlashWithVectors
+ 655               	.L62:
+ 656 0364 1092 0000 		sts (currentAddress)+1,__zero_reg__
+ 657 0368 1092 0000 		sts currentAddress,__zero_reg__
+ 658 036c 00D0      		rcall SoftI2cMasterInit
+ 659 036e B89A      		sbi 55-32,0
+ 660 0370 AC9A      		sbi 53-32,4
+ 661 0372 8BB7      		in r24,91-32
+ 662 0374 8062      		ori r24,lo8(32)
+ 663 0376 8BBF      		out 91-32,r24
+ 664 0378 BB9A      		sbi 55-32,3
+ 665 037a 88E8      		ldi r24,lo8(5000)
+ 666 037c 93E1      		ldi r25,hi8(5000)
+ 667               	.L63:
+ 668 037e ECE9      		ldi r30,lo8(412)
+ 669 0380 F1E0      		ldi r31,hi8(412)
+ 670               	/* #APP */
+ 671               	 ;  105 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.
+ 672 0382 3197      		1: sbiw r30,1
+ 673 0384 01F4      		brne 1b
+ 674               	 ;  0 "" 2
+ 675               	/* #NOAPP */
+ 676 0386 0197      		sbiw r24,1
+ 677 0388 01F4      		brne .L63
+ 678 038a BB98      		cbi 55-32,3
+ 679               	/* #APP */
+ 680               	 ;  401 "main.c" 1
+ 681 038c 7894      		sei
+ 682               	 ;  0 "" 2
+ 683               	/* #NOAPP */
+ 684               	.L127:
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 13
+
+
+ 685 038e 0091 0000 		lds r16,usbRxLen
+ 686 0392 0350      		subi r16,lo8(-(-3))
+ 687 0394 07FD      		sbrc r16,7
+ 688 0396 00C0      		rjmp .L64
+ 689 0398 8091 0000 		lds r24,usbInputBufOffset
+ 690 039c 9CE0      		ldi r25,lo8(12)
+ 691 039e E92E      		mov r14,r25
+ 692 03a0 F12C      		mov r15,__zero_reg__
+ 693 03a2 E81A      		sub r14,r24
+ 694 03a4 F108      		sbc r15,__zero_reg__
+ 695 03a6 E0E0      		ldi r30,lo8(usbRxBuf)
+ 696 03a8 F0E0      		ldi r31,hi8(usbRxBuf)
+ 697 03aa EE0E      		add r14,r30
+ 698 03ac FF1E      		adc r15,r31
+ 699 03ae 8091 0000 		lds r24,usbRxToken
+ 700 03b2 8D32      		cpi r24,lo8(45)
+ 701 03b4 01F0      		breq .+2
+ 702 03b6 00C0      		rjmp .L65
+ 703 03b8 0830      		cpi r16,lo8(8)
+ 704 03ba 01F0      		breq .+2
+ 705 03bc 00C0      		rjmp .L66
+ 706 03be 83EC      		ldi r24,lo8(-61)
+ 707 03c0 8093 0000 		sts usbTxBuf,r24
+ 708 03c4 8AE5      		ldi r24,lo8(90)
+ 709 03c6 8093 0000 		sts usbTxLen,r24
+ 710 03ca 1092 0000 		sts usbMsgFlags,__zero_reg__
+ 711 03ce D701      		movw r26,r14
+ 712 03d0 8C91      		ld r24,X
+ 713 03d2 8076      		andi r24,lo8(96)
+ 714 03d4 1196      		adiw r26,1
+ 715 03d6 9C91      		ld r25,X
+ 716 03d8 8823      		tst r24
+ 717 03da 01F4      		brne .+2
+ 718 03dc 00C0      		rjmp .L67
+ 719 03de 1092 0000 		sts (idlePolls)+1,__zero_reg__
+ 720 03e2 1092 0000 		sts idlePolls,__zero_reg__
+ 721 03e6 9923      		tst r25
+ 722 03e8 01F4      		brne .L68
+ 723 03ea 80E0      		ldi r24,lo8(replyBuffer.1908)
+ 724 03ec 90E0      		ldi r25,hi8(replyBuffer.1908)
+ 725 03ee 9093 0000 		sts (usbMsgPtr)+1,r25
+ 726 03f2 8093 0000 		sts usbMsgPtr,r24
+ 727 03f6 96E0      		ldi r25,lo8(6)
+ 728 03f8 00C0      		rjmp .L69
+ 729               	.L68:
+ 730 03fa 9130      		cpi r25,lo8(1)
+ 731 03fc 01F4      		brne .L70
+ 732 03fe F701      		movw r30,r14
+ 733 0400 8481      		ldd r24,Z+4
+ 734 0402 9581      		ldd r25,Z+5
+ 735 0404 9093 0000 		sts (currentAddress)+1,r25
+ 736 0408 8093 0000 		sts currentAddress,r24
+ 737 040c 00C0      		rjmp .L71
+ 738               	.L70:
+ 739 040e 9230      		cpi r25,lo8(2)
+ 740 0410 01F4      		brne .L72
+ 741 0412 8091 0000 		lds r24,events
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 14
+
+
+ 742 0416 8160      		ori r24,lo8(1)
+ 743 0418 00C0      		rjmp .L130
+ 744               	.L72:
+ 745 041a 9330      		cpi r25,lo8(3)
+ 746 041c 01F4      		brne .L73
+ 747 041e D701      		movw r26,r14
+ 748 0420 1296      		adiw r26,2
+ 749 0422 6D91      		ld r22,X+
+ 750 0424 7C91      		ld r23,X
+ 751 0426 1397      		sbiw r26,2+1
+ 752 0428 88EE      		ldi r24,lo8(1000)
+ 753 042a 93E0      		ldi r25,hi8(1000)
+ 754 042c 861B      		sub r24,r22
+ 755 042e 970B      		sbc r25,r23
+ 756 0430 8138      		cpi r24,129
+ 757 0432 9105      		cpc r25,__zero_reg__
+ 758 0434 00F0      		brlo .L74
+ 759 0436 90E8      		ldi r25,lo8(-128)
+ 760 0438 00C0      		rjmp .L75
+ 761               	.L74:
+ 762 043a 98EE      		ldi r25,lo8(-24)
+ 763 043c 961B      		sub r25,r22
+ 764 043e 01F4      		brne .+2
+ 765 0440 00C0      		rjmp .L69
+ 766               	.L75:
+ 767 0442 00E0      		ldi r16,lo8(dataBuffer.1913)
+ 768 0444 10E0      		ldi r17,hi8(dataBuffer.1913)
+ 769 0446 80E5      		ldi r24,lo8(80)
+ 770 0448 A801      		movw r20,r16
+ 771 044a 292F      		mov r18,r25
+ 772 044c 9B83      		std Y+3,r25
+ 773 044e 00D0      		rcall soft_i2c_eeprom_read_bytes
+ 774 0450 1093 0000 		sts (usbMsgPtr)+1,r17
+ 775 0454 0093 0000 		sts usbMsgPtr,r16
+ 776 0458 9B81      		ldd r25,Y+3
+ 777 045a 9F3F      		cpi r25,lo8(-1)
+ 778 045c 01F4      		brne .+2
+ 779 045e 00C0      		rjmp .L71
+ 780 0460 00C0      		rjmp .L69
+ 781               	.L73:
+ 782 0462 9430      		cpi r25,lo8(4)
+ 783 0464 01F4      		brne .L76
+ 784 0466 8091 0000 		lds r24,events
+ 785 046a 8062      		ori r24,lo8(32)
+ 786 046c 8093 0000 		sts events,r24
+ 787 0470 00C0      		rjmp .L71
+ 788               	.L76:
+ 789 0472 8091 0000 		lds r24,events
+ 790 0476 9530      		cpi r25,lo8(5)
+ 791 0478 01F4      		brne .L77
+ 792 047a 8061      		ori r24,lo8(16)
+ 793 047c 00C0      		rjmp .L130
+ 794               	.L77:
+ 795 047e 8460      		ori r24,lo8(4)
+ 796               	.L130:
+ 797 0480 8093 0000 		sts events,r24
+ 798 0484 90E0      		ldi r25,lo8(0)
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 15
+
+
+ 799 0486 00C0      		rjmp .L69
+ 800               	.L67:
+ 801 0488 F701      		movw r30,r14
+ 802 048a 2281      		ldd r18,Z+2
+ 803 048c 1092 0000 		sts usbTxBuf+9,__zero_reg__
+ 804 0490 9923      		tst r25
+ 805 0492 01F4      		brne .L78
+ 806 0494 1092 0000 		sts usbTxBuf+10,__zero_reg__
+ 807 0498 20E0      		ldi r18,lo8(usbTxBuf+9)
+ 808 049a 30E0      		ldi r19,hi8(usbTxBuf+9)
+ 809 049c 92E0      		ldi r25,lo8(2)
+ 810 049e 00C0      		rjmp .L79
+ 811               	.L78:
+ 812 04a0 9530      		cpi r25,lo8(5)
+ 813 04a2 01F4      		brne .L80
+ 814 04a4 2093 0000 		sts usbNewDeviceAddr,r18
+ 815 04a8 00C0      		rjmp .L88
+ 816               	.L80:
+ 817 04aa 9630      		cpi r25,lo8(6)
+ 818 04ac 01F4      		brne .L81
+ 819 04ae D701      		movw r26,r14
+ 820 04b0 1396      		adiw r26,3
+ 821 04b2 8C91      		ld r24,X
+ 822 04b4 8130      		cpi r24,lo8(1)
+ 823 04b6 01F4      		brne .L82
+ 824 04b8 80E0      		ldi r24,lo8(usbDescriptorDevice)
+ 825 04ba 90E0      		ldi r25,hi8(usbDescriptorDevice)
+ 826 04bc 00C0      		rjmp .L128
+ 827               	.L82:
+ 828 04be 8230      		cpi r24,lo8(2)
+ 829 04c0 01F4      		brne .L84
+ 830 04c2 80E0      		ldi r24,lo8(usbDescriptorConfiguration)
+ 831 04c4 90E0      		ldi r25,hi8(usbDescriptorConfiguration)
+ 832               	.L128:
+ 833 04c6 9093 0000 		sts (usbMsgPtr)+1,r25
+ 834 04ca 8093 0000 		sts usbMsgPtr,r24
+ 835 04ce 92E1      		ldi r25,lo8(18)
+ 836 04d0 00C0      		rjmp .L83
+ 837               	.L84:
+ 838 04d2 8330      		cpi r24,lo8(3)
+ 839 04d4 01F4      		brne .L85
+ 840 04d6 2223      		tst r18
+ 841 04d8 01F4      		brne .L85
+ 842 04da 80E0      		ldi r24,lo8(usbDescriptorString0)
+ 843 04dc 90E0      		ldi r25,hi8(usbDescriptorString0)
+ 844 04de 9093 0000 		sts (usbMsgPtr)+1,r25
+ 845 04e2 8093 0000 		sts usbMsgPtr,r24
+ 846 04e6 94E0      		ldi r25,lo8(4)
+ 847 04e8 00C0      		rjmp .L83
+ 848               	.L85:
+ 849 04ea 90E0      		ldi r25,lo8(0)
+ 850               	.L83:
+ 851 04ec 80E4      		ldi r24,lo8(64)
+ 852 04ee 8093 0000 		sts usbMsgFlags,r24
+ 853 04f2 00C0      		rjmp .L69
+ 854               	.L81:
+ 855 04f4 9830      		cpi r25,lo8(8)
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 16
+
+
+ 856 04f6 01F4      		brne .L86
+ 857 04f8 20E0      		ldi r18,lo8(usbConfiguration)
+ 858 04fa 30E0      		ldi r19,hi8(usbConfiguration)
+ 859 04fc 00C0      		rjmp .L129
+ 860               	.L86:
+ 861 04fe 9930      		cpi r25,lo8(9)
+ 862 0500 01F4      		brne .L87
+ 863 0502 2093 0000 		sts usbConfiguration,r18
+ 864 0506 00C0      		rjmp .L88
+ 865               	.L87:
+ 866 0508 9A30      		cpi r25,lo8(10)
+ 867 050a 01F4      		brne .L88
+ 868 050c 20E0      		ldi r18,lo8(usbTxBuf+9)
+ 869 050e 30E0      		ldi r19,hi8(usbTxBuf+9)
+ 870               	.L129:
+ 871 0510 91E0      		ldi r25,lo8(1)
+ 872 0512 00C0      		rjmp .L79
+ 873               	.L88:
+ 874 0514 20E0      		ldi r18,lo8(usbTxBuf+9)
+ 875 0516 30E0      		ldi r19,hi8(usbTxBuf+9)
+ 876 0518 90E0      		ldi r25,lo8(0)
+ 877               	.L79:
+ 878 051a 3093 0000 		sts (usbMsgPtr)+1,r19
+ 879 051e 2093 0000 		sts usbMsgPtr,r18
+ 880 0522 00C0      		rjmp .L69
+ 881               	.L71:
+ 882 0524 F701      		movw r30,r14
+ 883 0526 8081      		ld r24,Z
+ 884 0528 87FD      		sbrc r24,7
+ 885 052a 00C0      		rjmp .L89
+ 886 052c 2FEF      		ldi r18,lo8(-1)
+ 887 052e 00C0      		rjmp .L90
+ 888               	.L89:
+ 889 0530 D701      		movw r26,r14
+ 890 0532 1696      		adiw r26,6
+ 891 0534 2C91      		ld r18,X
+ 892               	.L90:
+ 893 0536 80E8      		ldi r24,lo8(-128)
+ 894 0538 8093 0000 		sts usbMsgFlags,r24
+ 895 053c 00C0      		rjmp .L91
+ 896               	.L69:
+ 897 053e F701      		movw r30,r14
+ 898 0540 8781      		ldd r24,Z+7
+ 899 0542 8823      		tst r24
+ 900 0544 01F4      		brne .L92
+ 901 0546 2681      		ldd r18,Z+6
+ 902 0548 2917      		cp r18,r25
+ 903 054a 00F0      		brlo .L91
+ 904               	.L92:
+ 905 054c 292F      		mov r18,r25
+ 906               	.L91:
+ 907 054e 2093 0000 		sts usbMsgLen,r18
+ 908 0552 00C0      		rjmp .L66
+ 909               	.L65:
+ 910 0554 8091 0000 		lds r24,usbMsgFlags
+ 911 0558 87FF      		sbrs r24,7
+ 912 055a 00C0      		rjmp .L66
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 17
+
+
+ 913 055c 8091 0000 		lds r24,writingToEeprom
+ 914 0560 8130      		cpi r24,lo8(1)
+ 915 0562 01F4      		brne .L93
+ 916 0564 10E0      		ldi r17,lo8(0)
+ 917 0566 00C0      		rjmp .L94
+ 918               	.L96:
+ 919 0568 F901      		movw r30,r18
+ 920 056a E050      		subi r30,lo8(-(writeBuffer))
+ 921 056c F040      		sbci r31,hi8(-(writeBuffer))
+ 922 056e D701      		movw r26,r14
+ 923 0570 8C91      		ld r24,X
+ 924 0572 8083      		st Z,r24
+ 925 0574 C901      		movw r24,r18
+ 926 0576 0196      		adiw r24,1
+ 927 0578 9093 0000 		sts (writeBufferIndex)+1,r25
+ 928 057c 8093 0000 		sts writeBufferIndex,r24
+ 929 0580 8034      		cpi r24,64
+ 930 0582 9105      		cpc r25,__zero_reg__
+ 931 0584 01F4      		brne .L95
+ 932 0586 80E4      		ldi r24,lo8(64)
+ 933 0588 00D0      		rcall writeEeprom
+ 934 058a 1092 0000 		sts (writeBufferIndex)+1,__zero_reg__
+ 935 058e 1092 0000 		sts writeBufferIndex,__zero_reg__
+ 936               	.L95:
+ 937 0592 1F5F      		subi r17,lo8(-(1))
+ 938 0594 0894      		sec
+ 939 0596 E11C      		adc r14,__zero_reg__
+ 940 0598 F11C      		adc r15,__zero_reg__
+ 941               	.L94:
+ 942 059a 2091 0000 		lds r18,writeBufferIndex
+ 943 059e 3091 0000 		lds r19,(writeBufferIndex)+1
+ 944 05a2 1017      		cp r17,r16
+ 945 05a4 00F0      		brlo .L96
+ 946 05a6 F901      		movw r30,r18
+ 947 05a8 E050      		subi r30,lo8(-(writeBuffer-1))
+ 948 05aa F040      		sbci r31,hi8(-(writeBuffer-1))
+ 949 05ac 8081      		ld r24,Z
+ 950 05ae 8930      		cpi r24,lo8(9)
+ 951 05b0 01F4      		brne .L66
+ 952 05b2 822F      		mov r24,r18
+ 953 05b4 8150      		subi r24,lo8(-(-1))
+ 954 05b6 00D0      		rcall writeEeprom
+ 955 05b8 1092 0000 		sts writingToEeprom,__zero_reg__
+ 956 05bc 00C0      		rjmp .L66
+ 957               	.L93:
+ 958 05be 8091 0000 		lds r24,currentAddress
+ 959 05c2 9091 0000 		lds r25,(currentAddress)+1
+ 960 05c6 0097      		sbiw r24,0
+ 961 05c8 01F4      		brne .L97
+ 962 05ca F701      		movw r30,r14
+ 963 05cc 8081      		ld r24,Z
+ 964 05ce 9181      		ldd r25,Z+1
+ 965 05d0 9093 0000 		sts (vectorTemp)+1,r25
+ 966 05d4 8093 0000 		sts vectorTemp,r24
+ 967 05d8 00C0      		rjmp .L98
+ 968               	.L97:
+ 969 05da 8430      		cpi r24,4
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 18
+
+
+ 970 05dc 9105      		cpc r25,__zero_reg__
+ 971 05de 01F4      		brne .L99
+ 972 05e0 D701      		movw r26,r14
+ 973 05e2 8D91      		ld r24,X+
+ 974 05e4 9C91      		ld r25,X
+ 975 05e6 9093 0000 		sts (vectorTemp+2)+1,r25
+ 976 05ea 8093 0000 		sts vectorTemp+2,r24
+ 977 05ee 00C0      		rjmp .L98
+ 978               	.L99:
+ 979 05f0 8050      		subi r24,lo8(4864)
+ 980 05f2 9341      		sbci r25,hi8(4864)
+ 981 05f4 00F4      		brsh .L100
+ 982               	.L98:
+ 983 05f6 F701      		movw r30,r14
+ 984 05f8 8081      		ld r24,Z
+ 985 05fa 9181      		ldd r25,Z+1
+ 986 05fc 00D0      		rcall writeWordToPageBuffer
+ 987 05fe 0250      		subi r16,lo8(-(-2))
+ 988 0600 01F0      		breq .L100
+ 989 0602 82E0      		ldi r24,lo8(2)
+ 990 0604 90E0      		ldi r25,hi8(2)
+ 991 0606 E80E      		add r14,r24
+ 992 0608 F91E      		adc r15,r25
+ 993 060a 00C0      		rjmp .L93
+ 994               	.L100:
+ 995 060c 8091 0000 		lds r24,currentAddress
+ 996 0610 9091 0000 		lds r25,(currentAddress)+1
+ 997 0614 8F73      		andi r24,lo8(63)
+ 998 0616 9070      		andi r25,hi8(63)
+ 999 0618 892B      		or r24,r25
+ 1000 061a 01F4      		brne .L66
+ 1001 061c 8091 0000 		lds r24,events
+ 1002 0620 8260      		ori r24,lo8(2)
+ 1003 0622 8093 0000 		sts events,r24
+ 1004 0626 1092 0000 		sts usbMsgLen,__zero_reg__
+ 1005               	.L66:
+ 1006 062a 1092 0000 		sts usbRxLen,__zero_reg__
+ 1007               	.L64:
+ 1008 062e 8091 0000 		lds r24,usbTxLen
+ 1009 0632 84FF      		sbrs r24,4
+ 1010 0634 00C0      		rjmp .L101
+ 1011 0636 8091 0000 		lds r24,usbMsgLen
+ 1012 063a 8F3F      		cpi r24,lo8(-1)
+ 1013 063c 01F0      		breq .L101
+ 1014 063e 082F      		mov r16,r24
+ 1015 0640 8930      		cpi r24,lo8(9)
+ 1016 0642 00F0      		brlo .L102
+ 1017 0644 08E0      		ldi r16,lo8(8)
+ 1018               	.L102:
+ 1019 0646 801B      		sub r24,r16
+ 1020 0648 8093 0000 		sts usbMsgLen,r24
+ 1021 064c 8091 0000 		lds r24,usbTxBuf
+ 1022 0650 98E8      		ldi r25,lo8(-120)
+ 1023 0652 8927      		eor r24,r25
+ 1024 0654 8093 0000 		sts usbTxBuf,r24
+ 1025 0658 0023      		tst r16
+ 1026 065a 01F0      		breq .L103
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 19
+
+
+ 1027 065c E091 0000 		lds r30,usbMsgPtr
+ 1028 0660 F091 0000 		lds r31,(usbMsgPtr)+1
+ 1029 0664 8091 0000 		lds r24,usbMsgFlags
+ 1030 0668 86FF      		sbrs r24,6
+ 1031 066a 00C0      		rjmp .L104
+ 1032 066c 902F      		mov r25,r16
+ 1033 066e A0E0      		ldi r26,lo8(usbTxBuf+1)
+ 1034 0670 B0E0      		ldi r27,hi8(usbTxBuf+1)
+ 1035               	.L105:
+ 1036               	/* #APP */
+ 1037               	 ;  504 "usbdrv/usbdrv.c" 1
+ 1038 0672 8491      		lpm r24, Z
+ 1039               		
+ 1040               	 ;  0 "" 2
+ 1041               	/* #NOAPP */
+ 1042 0674 8D93      		st X+,r24
+ 1043 0676 3196      		adiw r30,1
+ 1044 0678 9150      		subi r25,lo8(-(-1))
+ 1045 067a 01F4      		brne .L105
+ 1046 067c 00C0      		rjmp .L106
+ 1047               	.L104:
+ 1048 067e 902F      		mov r25,r16
+ 1049 0680 A0E0      		ldi r26,lo8(usbTxBuf+1)
+ 1050 0682 B0E0      		ldi r27,hi8(usbTxBuf+1)
+ 1051               	.L107:
+ 1052 0684 8191      		ld r24,Z+
+ 1053 0686 8D93      		st X+,r24
+ 1054 0688 9150      		subi r25,lo8(-(-1))
+ 1055 068a 01F4      		brne .L107
+ 1056               	.L106:
+ 1057 068c F093 0000 		sts (usbMsgPtr)+1,r31
+ 1058 0690 E093 0000 		sts usbMsgPtr,r30
+ 1059               	.L103:
+ 1060 0694 80E0      		ldi r24,lo8(usbTxBuf+1)
+ 1061 0696 90E0      		ldi r25,hi8(usbTxBuf+1)
+ 1062 0698 602F      		mov r22,r16
+ 1063 069a 00D0      		rcall usbCrc16Append
+ 1064 069c 602F      		mov r22,r16
+ 1065 069e 6C5F      		subi r22,lo8(-(4))
+ 1066 06a0 6C30      		cpi r22,lo8(12)
+ 1067 06a2 01F0      		breq .L108
+ 1068 06a4 8FEF      		ldi r24,lo8(-1)
+ 1069 06a6 8093 0000 		sts usbMsgLen,r24
+ 1070               	.L108:
+ 1071 06aa 6093 0000 		sts usbTxLen,r22
+ 1072               	.L101:
+ 1073 06ae 94E1      		ldi r25,lo8(20)
+ 1074               	.L110:
+ 1075 06b0 86B3      		in r24,54-32
+ 1076 06b2 8871      		andi r24,lo8(24)
+ 1077 06b4 01F4      		brne .L109
+ 1078 06b6 9150      		subi r25,lo8(-(-1))
+ 1079 06b8 01F4      		brne .L110
+ 1080 06ba 1092 0000 		sts usbNewDeviceAddr,__zero_reg__
+ 1081 06be 1092 0000 		sts usbDeviceAddr,__zero_reg__
+ 1082               	.L109:
+ 1083 06c2 00E0      		ldi r16,lo8(0)
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 20
+
+
+ 1084 06c4 9923      		tst r25
+ 1085 06c6 01F4      		brne .L111
+ 1086 06c8 01E0      		ldi r16,lo8(1)
+ 1087               	.L111:
+ 1088 06ca 8091 0000 		lds r24,wasReset.1585
+ 1089 06ce 8017      		cp r24,r16
+ 1090 06d0 01F0      		breq .L112
+ 1091 06d2 0023      		tst r16
+ 1092 06d4 01F4      		brne .L113
+ 1093               	/* #APP */
+ 1094               	 ;  557 "usbdrv/usbdrv.c" 1
+ 1095 06d6 F894      		cli
+ 1096               	 ;  0 "" 2
+ 1097               	/* #NOAPP */
+ 1098 06d8 00D0      		rcall calibrateOscillator
+ 1099               	/* #APP */
+ 1100               	 ;  557 "usbdrv/usbdrv.c" 1
+ 1101 06da 7894      		sei
+ 1102               	 ;  0 "" 2
+ 1103               	/* #NOAPP */
+ 1104               	.L113:
+ 1105 06dc 0093 0000 		sts wasReset.1585,r16
+ 1106               	.L112:
+ 1107 06e0 8CE9      		ldi r24,lo8(412)
+ 1108 06e2 91E0      		ldi r25,hi8(412)
+ 1109               	/* #APP */
+ 1110               	 ;  105 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.
+ 1111 06e4 0197      		1: sbiw r24,1
+ 1112 06e6 01F4      		brne 1b
+ 1113               	 ;  0 "" 2
+ 1114               	/* #NOAPP */
+ 1115 06e8 8091 0000 		lds r24,idlePolls
+ 1116 06ec 9091 0000 		lds r25,(idlePolls)+1
+ 1117 06f0 0196      		adiw r24,1
+ 1118 06f2 9093 0000 		sts (idlePolls)+1,r25
+ 1119 06f6 8093 0000 		sts idlePolls,r24
+ 1120 06fa 8091 0000 		lds r24,events
+ 1121 06fe 182F      		mov r17,r24
+ 1122 0700 80FF      		sbrs r24,0
+ 1123 0702 00C0      		rjmp .L114
+ 1124               	/* #APP */
+ 1125               	 ;  157 "main.c" 1
+ 1126 0704 F894      		cli
+ 1127               	 ;  0 "" 2
+ 1128               	/* #NOAPP */
+ 1129 0706 E0E0      		ldi r30,lo8(4864)
+ 1130 0708 F3E1      		ldi r31,hi8(4864)
+ 1131               	.L116:
+ 1132 070a E054      		subi r30,lo8(-(-64))
+ 1133 070c F040      		sbci r31,hi8(-(-64))
+ 1134 070e 83E0      		ldi r24,lo8(3)
+ 1135               	/* #APP */
+ 1136               	 ;  161 "main.c" 1
+ 1137 0710 8093 5700 		sts 87, r24
+ 1138 0714 E895      		spm
+ 1139               		
+ 1140               	 ;  0 "" 2
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 21
+
+
+ 1141               	/* #NOAPP */
+ 1142               	.L115:
+ 1143 0716 07B6      		in __tmp_reg__,87-32
+ 1144 0718 00FC      		sbrc __tmp_reg__,0
+ 1145 071a 00C0      		rjmp .L115
+ 1146 071c 3097      		sbiw r30,0
+ 1147 071e 01F4      		brne .L116
+ 1148 0720 1092 0000 		sts (currentAddress)+1,__zero_reg__
+ 1149 0724 1092 0000 		sts currentAddress,__zero_reg__
+ 1150 0728 00D0      		rcall fillFlashWithVectors
+ 1151               	/* #APP */
+ 1152               	 ;  166 "main.c" 1
+ 1153 072a 7894      		sei
+ 1154               	 ;  0 "" 2
+ 1155               	/* #NOAPP */
+ 1156               	.L114:
+ 1157 072c 11FF      		sbrs r17,1
+ 1158 072e 00C0      		rjmp .L117
+ 1159 0730 8AE3      		ldi r24,lo8(8250)
+ 1160 0732 90E2      		ldi r25,hi8(8250)
+ 1161               	/* #APP */
+ 1162               	 ;  105 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.
+ 1163 0734 0197      		1: sbiw r24,1
+ 1164 0736 01F4      		brne 1b
+ 1165               	 ;  0 "" 2
+ 1166               	/* #NOAPP */
+ 1167 0738 8091 0000 		lds r24,currentAddress
+ 1168 073c 9091 0000 		lds r25,(currentAddress)+1
+ 1169 0740 8F73      		andi r24,lo8(63)
+ 1170 0742 9070      		andi r25,hi8(63)
+ 1171 0744 892B      		or r24,r25
+ 1172 0746 01F0      		breq .L118
+ 1173 0748 00D0      		rcall fillFlashWithVectors
+ 1174 074a 00C0      		rjmp .L117
+ 1175               	.L118:
+ 1176 074c 00D0      		rcall writeFlashPage
+ 1177               	.L117:
+ 1178 074e 14FF      		sbrs r17,4
+ 1179 0750 00C0      		rjmp .L119
+ 1180 0752 8AE0      		ldi r24,lo8(10)
+ 1181 0754 90E0      		ldi r25,hi8(10)
+ 1182 0756 9A83      		std Y+2,r25
+ 1183 0758 8983      		std Y+1,r24
+ 1184 075a 1092 0000 		sts (writeBufferIndex)+1,__zero_reg__
+ 1185 075e 1092 0000 		sts writeBufferIndex,__zero_reg__
+ 1186 0762 81E0      		ldi r24,lo8(1)
+ 1187 0764 8093 0000 		sts writingToEeprom,r24
+ 1188 0768 1092 0000 		sts (eepromAddress)+1,__zero_reg__
+ 1189 076c 1092 0000 		sts eepromAddress,__zero_reg__
+ 1190 0770 CE01      		movw r24,r28
+ 1191 0772 0196      		adiw r24,1
+ 1192 0774 60E0      		ldi r22,lo8(0)
+ 1193 0776 70E0      		ldi r23,hi8(0)
+ 1194 0778 40E0      		ldi r20,lo8(gs(eeprom_write_byte))
+ 1195 077a 50E0      		ldi r21,hi8(gs(eeprom_write_byte))
+ 1196 077c 00D0      		rcall __eewr_word
+ 1197               	.L119:
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 22
+
+
+ 1198 077e 8091 0000 		lds r24,events
+ 1199 0782 982F      		mov r25,r24
+ 1200 0784 83FF      		sbrs r24,3
+ 1201 0786 00C0      		rjmp .L120
+ 1202 0788 81E0      		ldi r24,lo8(1)
+ 1203 078a 8093 0000 		sts continuePolling,r24
+ 1204               	.L120:
+ 1205 078e 92FD      		sbrc r25,2
+ 1206 0790 00C0      		rjmp .L121
+ 1207 0792 1092 0000 		sts events,__zero_reg__
+ 1208 0796 8091 0000 		lds r24,idlePolls
+ 1209 079a 9091 0000 		lds r25,(idlePolls)+1
+ 1210 079e 885A      		subi r24,lo8(25000)
+ 1211 07a0 9146      		sbci r25,hi8(25000)
+ 1212 07a2 00F4      		brsh .+2
+ 1213 07a4 00C0      		rjmp .L127
+ 1214 07a6 8091 0000 		lds r24,continuePolling
+ 1215 07aa 8823      		tst r24
+ 1216 07ac 01F0      		breq .+2
+ 1217 07ae 00C0      		rjmp .L127
+ 1218               	.L121:
+ 1219 07b0 00D0      		rcall SoftI2cMasterDeInit
+ 1220 07b2 80E8      		ldi r24,lo8(-128)
+ 1221 07b4 86BD      		out 70-32,r24
+ 1222 07b6 81E0      		ldi r24,lo8(1)
+ 1223 07b8 86BD      		out 70-32,r24
+ 1224 07ba 00C0      		rjmp .L123
+ 1225               	.L124:
+ 1226 07bc 81B7      		in r24,81-32
+ 1227 07be 8150      		subi r24,lo8(-(-1))
+ 1228 07c0 81BF      		out 81-32,r24
+ 1229               	.L123:
+ 1230 07c2 81B7      		in r24,81-32
+ 1231 07c4 D816      		cp r13,r24
+ 1232 07c6 00F0      		brlo .L124
+ 1233 07c8 82E2      		ldi r24,lo8(-24286)
+ 1234 07ca 91EA      		ldi r25,hi8(-24286)
+ 1235               	/* #APP */
+ 1236               	 ;  105 "/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/../lib/gcc/avr/4.
+ 1237 07cc 0197      		1: sbiw r24,1
+ 1238 07ce 01F4      		brne 1b
+ 1239               	 ;  0 "" 2
+ 1240               	 ;  447 "main.c" 1
+ 1241 07d0 F894      		cli
+ 1242               	 ;  0 "" 2
+ 1243               	/* #NOAPP */
+ 1244 07d2 1BBE      		out 91-32,__zero_reg__
+ 1245 07d4 15BA      		out 53-32,__zero_reg__
+ 1246 07d6 1092 5F02 		sts 607,__zero_reg__
+ 1247 07da 1092 5E02 		sts 606,__zero_reg__
+ 1248               	/* #APP */
+ 1249               	 ;  456 "main.c" 1
+ 1250 07de 00C0      		rjmp __vectors - 4
+ 1251               	 ;  0 "" 2
+ 1252               	/* epilogue start */
+ 1253               	/* #NOAPP */
+ 1254 07e0 0F90      		pop __tmp_reg__
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 23
+
+
+ 1255 07e2 0F90      		pop __tmp_reg__
+ 1256 07e4 0F90      		pop __tmp_reg__
+ 1257 07e6 CF91      		pop r28
+ 1258 07e8 DF91      		pop r29
+ 1259 07ea 0895      		ret
+ 1260               		.size	main, .-main
+ 1261               	.global	usbTxLen
+ 1262               		.data
+ 1263               		.type	usbTxLen, @object
+ 1264               		.size	usbTxLen, 1
+ 1265               	usbTxLen:
+ 1266 0000 5A        		.byte	90
+ 1267               	.global	usbDescriptorString0
+ 1268               		.section	.progmem.data,"a",@progbits
+ 1269               		.type	usbDescriptorString0, @object
+ 1270               		.size	usbDescriptorString0, 4
+ 1271               	usbDescriptorString0:
+ 1272 0000 04        		.byte	4
+ 1273 0001 03        		.byte	3
+ 1274 0002 09        		.byte	9
+ 1275 0003 04        		.byte	4
+ 1276               	.global	usbDescriptorDevice
+ 1277               		.type	usbDescriptorDevice, @object
+ 1278               		.size	usbDescriptorDevice, 18
+ 1279               	usbDescriptorDevice:
+ 1280 0004 12        		.byte	18
+ 1281 0005 01        		.byte	1
+ 1282 0006 10        		.byte	16
+ 1283 0007 01        		.byte	1
+ 1284 0008 FF        		.byte	-1
+ 1285 0009 00        		.byte	0
+ 1286 000a 00        		.byte	0
+ 1287 000b 08        		.byte	8
+ 1288 000c D0        		.byte	-48
+ 1289 000d 16        		.byte	22
+ 1290 000e 53        		.byte	83
+ 1291 000f 07        		.byte	7
+ 1292 0010 04        		.byte	4
+ 1293 0011 01        		.byte	1
+ 1294 0012 00        		.byte	0
+ 1295 0013 00        		.byte	0
+ 1296 0014 00        		.byte	0
+ 1297 0015 01        		.byte	1
+ 1298               	.global	usbDescriptorConfiguration
+ 1299               		.type	usbDescriptorConfiguration, @object
+ 1300               		.size	usbDescriptorConfiguration, 18
+ 1301               	usbDescriptorConfiguration:
+ 1302 0016 09        		.byte	9
+ 1303 0017 02        		.byte	2
+ 1304 0018 12        		.byte	18
+ 1305 0019 00        		.byte	0
+ 1306 001a 01        		.byte	1
+ 1307 001b 01        		.byte	1
+ 1308 001c 00        		.byte	0
+ 1309 001d 80        		.byte	-128
+ 1310 001e 32        		.byte	50
+ 1311 001f 09        		.byte	9
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 24
+
+
+ 1312 0020 04        		.byte	4
+ 1313 0021 00        		.byte	0
+ 1314 0022 00        		.byte	0
+ 1315 0023 00        		.byte	0
+ 1316 0024 00        		.byte	0
+ 1317 0025 00        		.byte	0
+ 1318 0026 00        		.byte	0
+ 1319 0027 00        		.byte	0
+ 1320               	.global	something
+ 1321               	.global	something
+ 1322               		.section .bss
+ 1323               		.type	something, @object
+ 1324               		.size	something, 2
+ 1325               	something:
+ 1326 0000 0000      		.skip 2,0
+ 1327               	.global	idlePolls
+ 1328               	.global	idlePolls
+ 1329               		.type	idlePolls, @object
+ 1330               		.size	idlePolls, 2
+ 1331               	idlePolls:
+ 1332 0002 0000      		.skip 2,0
+ 1333               	.global	continuePolling
+ 1334               	.global	continuePolling
+ 1335               		.type	continuePolling, @object
+ 1336               		.size	continuePolling, 1
+ 1337               	continuePolling:
+ 1338 0004 00        		.skip 1,0
+ 1339               	.global	writeBufferIndex
+ 1340               	.global	writeBufferIndex
+ 1341               		.type	writeBufferIndex, @object
+ 1342               		.size	writeBufferIndex, 2
+ 1343               	writeBufferIndex:
+ 1344 0005 0000      		.skip 2,0
+ 1345               	.global	eepromAddress
+ 1346               	.global	eepromAddress
+ 1347               		.type	eepromAddress, @object
+ 1348               		.size	eepromAddress, 2
+ 1349               	eepromAddress:
+ 1350 0007 0000      		.skip 2,0
+ 1351               		.lcomm events,1
+ 1352               		.lcomm didWriteSomething,1
+ 1353               		.data
+ 1354               		.type	usbMsgLen, @object
+ 1355               		.size	usbMsgLen, 1
+ 1356               	usbMsgLen:
+ 1357 0001 FF        		.byte	-1
+ 1358               		.lcomm dataBuffer.1913,128
+ 1359               		.type	replyBuffer.1908, @object
+ 1360               		.size	replyBuffer.1908, 6
+ 1361               	replyBuffer.1908:
+ 1362 0002 12        		.byte	18
+ 1363 0003 FC        		.byte	-4
+ 1364 0004 40        		.byte	64
+ 1365 0005 06        		.byte	6
+ 1366 0006 00        		.byte	0
+ 1367 0007 02        		.byte	2
+ 1368               		.lcomm writingToEeprom,1
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 25
+
+
+ 1369               		.lcomm wasReset.1585,1
+ 1370               		.lcomm usbMsgFlags,1
+ 1371               		.lcomm vectorTemp,4
+ 1372               		.lcomm currentAddress,2
+ 1373               		.comm usbMsgPtr,2,1
+ 1374               		.comm usbRxToken,1,1
+ 1375               		.comm usbConfiguration,1,1
+ 1376               		.comm usbRxBuf,22,1
+ 1377               		.comm usbInputBufOffset,1,1
+ 1378               		.comm usbDeviceAddr,1,1
+ 1379               		.comm usbNewDeviceAddr,1,1
+ 1380               		.comm usbRxLen,1,1
+ 1381               		.comm usbCurrentTok,1,1
+ 1382               		.comm usbTxBuf,11,1
+ 1383               		.comm writeBuffer,64,1
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 26
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:2      *ABS*:0000003f __SREG__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:3      *ABS*:0000003e __SP_H__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:4      *ABS*:0000003d __SP_L__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:5      *ABS*:00000034 __CCP__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:12     .text:00000000 eeprom_write_byte
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:39     .text:0000001a SoftI2cMasterInit
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:51     .text:00000024 SoftI2cMasterDeInit
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:63     .text:0000002e SoftI2cMasterRead
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:111    .text:00000068 SoftI2cMasterWrite
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:157    .text:000000a8 SoftI2cMasterStart
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:175    .text:000000b6 SoftI2cMasterRestart
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:193    .text:000000c4 SoftI2cMasterStop
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:225    .text:000000de soft_i2c_eeprom_write_bytes
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:282    .text:0000013a soft_i2c_eeprom_erase
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1325   .bss:00000000 something
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:340    .text:000001a0 soft_i2c_eeprom_read_bytes
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:418    .text:00000226 writeFlashPage
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1351   .bss:0000000a didWriteSomething
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1371   .bss:00000092 currentAddress
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:452    .text:0000024a writeWordToPageBuffer
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1370   .bss:0000008e vectorTemp
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:521    .text:000002b4 fillFlashWithVectors
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:541    .init3:00000000 PushMagicWord
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:562    .text:000002ce writeEeprom
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1349   .bss:00000007 eepromAddress
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1343   .bss:00000005 writeBufferIndex
+                            *COM*:00000040 writeBuffer
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:608    .text:0000032c main
+                            *COM*:00000001 usbRxLen
+                            *COM*:00000001 usbInputBufOffset
+                            *COM*:00000016 usbRxBuf
+                            *COM*:00000001 usbRxToken
+                            *COM*:0000000b usbTxBuf
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1265   .data:00000000 usbTxLen
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1369   .bss:0000008d usbMsgFlags
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1331   .bss:00000002 idlePolls
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1361   .data:00000002 replyBuffer.1908
+                            *COM*:00000002 usbMsgPtr
+                             .bss:00000009 events
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1352   .bss:0000000b dataBuffer.1913
+                            *COM*:00000001 usbNewDeviceAddr
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1279   .progmem.data:00000004 usbDescriptorDevice
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1301   .progmem.data:00000016 usbDescriptorConfiguration
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1271   .progmem.data:00000000 usbDescriptorString0
+                            *COM*:00000001 usbConfiguration
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1356   .data:00000001 usbMsgLen
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1358   .bss:0000008b writingToEeprom
+                            *COM*:00000001 usbDeviceAddr
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1368   .bss:0000008c wasReset.1585
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s:1337   .bss:00000004 continuePolling
+                            *COM*:00000001 usbCurrentTok
+
+UNDEFINED SYMBOLS
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccx9fDJJ.s 			page 27
+
+
+__do_copy_data
+__do_clear_bss
+__eewr_word
+usbCrc16Append
+calibrateOscillator
+__vectors
