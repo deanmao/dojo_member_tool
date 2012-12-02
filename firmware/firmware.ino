@@ -1,5 +1,4 @@
-// our attiny85 will run at 16mhz
-//#define F_CPU 16000000
+#include <EEPROM.h>
 
 // pins 1 & 2 are used for I2C
 #define TWI_SDA_PIN PB1
@@ -24,6 +23,13 @@
 #define I2C_DELAY_USEC 4
 #define I2C_READ 1
 #define I2C_WRITE 0
+
+// pin 0 is the serial rx for our rfid reader
+SoftwareSerial rfid = SoftwareSerial(0, 5);
+char data[16];
+bool readingRfid = false;
+byte dataIndex = 0;
+
 
 // Initialize SCL/SDA pins and set the bus high
 void SoftI2cMasterInit(void) {
@@ -127,8 +133,8 @@ void SoftI2cMasterStop(void) {
 bool find(byte *tag, byte length) {
   byte i;
   byte x = 0;
-  bool found = false;
-  int bytestoRead = 2900;
+  int matchedBytes = 0;
+  int bytestoRead = 20; //EEPROM.read(10) + (EEPROM.read(11) << 8);
   
   sei();
   SoftI2cMasterInit();
@@ -141,29 +147,27 @@ bool find(byte *tag, byte length) {
   for (i = 0; i < bytestoRead; i++) {
     // we compare byte by byte and ensure the length is the right
     // amount
-    char c = SoftI2cMasterRead(i == (bytestoRead-1));
-    if (c == '\n') {
-      if (x == length) {
-        found = true;
-        break;
+    byte c = SoftI2cMasterRead(i == (bytestoRead-1));
+    if (((i + 1)%6) == 0 && c == 0) {
+      // we are at a boundary, if found is still true, we matched everything
+      if (matchedBytes == 5) {
+        break; 
+      } else {
+        matchedBytes = 0;
       }
-      x = 0;
-    } 
-    else if (c == tag[x]) {
-      x++; 
+    } else {
+      if (c == tag[i%6]) {
+        matchedBytes++;
+      } else {
+        matchedBytes = 0;
+      }
     }
   }
   SoftI2cMasterStop();
   SoftI2cMasterDeInit();
 
-  return found;
+  return matchedBytes == 5;
 }
-
-// pin 0 is the serial rx for our rfid reader
-SoftwareSerial rfid = SoftwareSerial(0, 5);
-char data[16];
-bool readingRfid = false;
-byte dataIndex = 0;
 
 // pins 3 & 4 are green & red leds
 byte green = 3;
@@ -239,8 +243,14 @@ void loop() {
       else if (readByte == 3) {
         byte byteTag[6];
         byte i, t;
-        for(i=0, t=0; i<dataIndex-4; i+=2, t++) {
-          byteTag[t] = (data[i]<<4) + data[i+1];
+        for(i=0; i<6; i++) {
+          byteTag[i] = 0; 
+        }
+        for(i=0, t=3; i<dataIndex-4; i+=2, t--) {
+          if (t >= 0) byteTag[t] = (data[i]<<4) + data[i+1];
+        }
+        for(i=0; i<16; i++) {
+          data[i] = 0;
         }
         if (find(byteTag, t)) {
           clearLed();

@@ -60,7 +60,7 @@ micronucleus* micronucleus_connect();
 void delay(unsigned int duration);
 int micronucleus_eraseFlash(micronucleus* deviceHandle, micronucleus_callback progress);
 int micronucleus_writeEeprom(micronucleus* deviceHandle, unsigned char* data, int length, micronucleus_callback prog);
-int micronucleus_readEeprom(micronucleus* deviceHandle, int address, micronucleus_callback progress);
+int micronucleus_readEeprom(micronucleus* deviceHandle, int address, int length, unsigned char *buffer, micronucleus_callback progress);
 int micronucleus_writeFlash(micronucleus* deviceHandle, unsigned int program_length,
                             unsigned char* program, micronucleus_callback progress);
 int micronucleus_startApp(micronucleus* deviceHandle);

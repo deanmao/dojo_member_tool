@@ -14,6 +14,7 @@
 {
     IBOutlet NSButton *updateFirmwareButton;
     IBOutlet NSButton *uploadMembersButton;
+    IBOutlet NSButton *manualCheckBox;
     IBOutlet NSTextField *statusField;
     IBOutlet NSProgressIndicator *progressIndicator;
     DLDevice *device;

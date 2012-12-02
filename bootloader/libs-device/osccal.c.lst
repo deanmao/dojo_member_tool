@@ -1,4 +1,4 @@
-GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s 			page 1
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccWa57ws.s 			page 1
 
 
    1               		.file	"osccal.c"
@@ -58,7 +58,7 @@ GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s 			page
   55 0046 97FF      		sbrs r25,7
   56 0048 00C0      		rjmp .L6
   57 004a 9095      		com r25
-GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s 			page 2
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccWa57ws.s 			page 2
 
 
   58 004c 8195      		neg r24
@@ -91,18 +91,18 @@ GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s 			page
   85 007a FF90      		pop r15
   86 007c 0895      		ret
   87               		.size	calibrateOscillator, .-calibrateOscillator
-GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s 			page 3
+GAS LISTING /var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccWa57ws.s 			page 3
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 osccal.c
-/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s:2      *ABS*:0000003f __SREG__
-/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s:3      *ABS*:0000003e __SP_H__
-/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s:4      *ABS*:0000003d __SP_L__
-/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s:5      *ABS*:00000034 __CCP__
-/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s:6      *ABS*:00000000 __tmp_reg__
-/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s:7      *ABS*:00000001 __zero_reg__
-/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccuhJTZW.s:13     .text:00000000 calibrateOscillator
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccWa57ws.s:2      *ABS*:0000003f __SREG__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccWa57ws.s:3      *ABS*:0000003e __SP_H__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccWa57ws.s:4      *ABS*:0000003d __SP_L__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccWa57ws.s:5      *ABS*:00000034 __CCP__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccWa57ws.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccWa57ws.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/39/2gz9k98n5sg_yl5wg_yt35kh0000gn/T//ccWa57ws.s:13     .text:00000000 calibrateOscillator
 
 UNDEFINED SYMBOLS
 __do_copy_data

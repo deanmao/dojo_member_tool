@@ -10,7 +10,8 @@
 
 @property (nonatomic) id delegate;
 
-- uploadMembers;
+- uploadMembers:(NSArray*)members;
 - updateFirmware;
+- waitForDevice;
 
 @end

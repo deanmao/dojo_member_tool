@@ -124,6 +124,7 @@ uchar continuePolling = FALSE;
 uchar writeBuffer[64];
 uint16_t writeBufferIndex = 0;
 uint16_t eepromAddress = 0;
+uint16_t totalWriteCount, currentWriteCount;
 static uchar writingToEeprom = FALSE;
 
 static uint16_t vectorTemp[2]; // remember data to create tinyVector table before BOOTLOADER_ADDRESS
@@ -259,10 +260,10 @@ static uchar usbFunctionSetup(uchar data[8]) {
     };
     
     if (rq->bRequest == 0) { // get device info
-        // uint16_t localAddr1 = 10;
-        // uint16_t localAddr2 = 11;
-        // replyBuffer[4] = eeprom_read_byte(&localAddr1);
-        // replyBuffer[5] = eeprom_read_byte(&localAddr2); 
+        uint8_t localAddr1 = 10;
+        uint8_t localAddr2 = 11;
+        replyBuffer[4] = eeprom_read_byte(&localAddr1);
+        replyBuffer[5] = eeprom_read_byte(&localAddr2); 
         usbMsgPtr = replyBuffer;
         return 6;
         
@@ -276,11 +277,16 @@ static uchar usbFunctionSetup(uchar data[8]) {
         fireEvent(EVENT_ERASE_APPLICATION);
         
     } else if (rq->bRequest == 3) { // Dojo: Read eeprom
-      uint16_t localAddr = 10;
-      uint16_t endAddress = 1000; //eeprom_read_word(&localAddr);
       uint16_t startAddress = rq->wValue.word;
+      uint16_t endAddress = rq->wIndex.word;
       uchar length = 128;
       static uchar dataBuffer[128];
+
+      writeBufferIndex = 0;
+      currentWriteCount = 0;
+      writingToEeprom = TRUE;
+      eepromAddress = 0;
+
       if (endAddress == 0) {
         length = 0;
       } else if ((endAddress - startAddress) > 128) {
@@ -294,6 +300,7 @@ static uchar usbFunctionSetup(uchar data[8]) {
       }
       return length;
     } else if (rq->bRequest == 4) { // Dojo: Write eeprom
+      totalWriteCount = rq->wValue.word;
       fireEvent(EVENT_WRITE_EEPROM);
       return USB_NO_MSG;
     } else if (rq->bRequest == 5) { // Dojo: Write eeprom
@@ -311,6 +318,7 @@ static uchar usbFunctionSetup(uchar data[8]) {
 static inline void startWritingEeprom(void) {
   uint16_t localAddr = 10;
   writeBufferIndex = 0;
+  currentWriteCount = 0;
   writingToEeprom = TRUE;
   eepromAddress = 0;
   eeprom_write_word(&localAddr, 0);
@@ -319,7 +327,6 @@ static inline void startWritingEeprom(void) {
 static void writeEeprom(uchar len) {
   uint16_t localAddr = 10;
   soft_i2c_eeprom_write_bytes(EEPROM_ADDR, eepromAddress, writeBuffer, writeBufferIndex, len);
- // soft_i2c_eeprom_erase(EEPROM_ADDR, eepromAddress, len);
   eepromAddress = eepromAddress + len;
   eeprom_write_word(&localAddr, eepromAddress);
 }
@@ -332,17 +339,18 @@ static uchar usbFunctionWrite(uchar *data, uchar length) {
     for(i = 0; i<length; i++) {
       writeBuffer[writeBufferIndex] = data[i];
       writeBufferIndex++;
-      if (writeBufferIndex == EEPROM_PAGE_SIZE) {
+      currentWriteCount++;
+      if (writeBufferIndex == EEPROM_PAGE_SIZE || currentWriteCount == totalWriteCount) {
         writeEeprom(writeBufferIndex);
         writeBufferIndex = 0;
       }
     }
-    if (writeBuffer[writeBufferIndex-1] == '\t') {
-      writeEeprom(writeBufferIndex-1);
+    if (currentWriteCount == totalWriteCount) {
       writingToEeprom = FALSE;
+      return 1;
+    } else {
+      return 0;
     }
-    return 0;
-    
   } else {
       //if (length > writeLength) length = writeLength; // test for missing final page bug
       //writeLength -= length;

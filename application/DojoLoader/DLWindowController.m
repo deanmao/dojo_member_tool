@@ -40,13 +40,33 @@
 
 - (IBAction)updateFirmware:(id)sender
 {
-    dispatch_async(queue, ^{
-        NSLog(@"downloading firmware...");
+    if ([manualCheckBox state] == NSOnState) {
+        // show open file dialog
+        NSOpenPanel *panel	= [NSOpenPanel openPanel];
+        [panel setAllowedFileTypes: [NSArray arrayWithObjects:@"hex", nil]];
+        NSInteger button	= [panel runModal];
+        if(button == NSOKButton){
+            NSArray *urls = [panel URLs];
+            
+            dispatch_async(queue, ^{
+                NSLog(@"downloading firmware...");
+                
+                
+                NSLog(@"updating firmware");
+                //[device updateFirmware];
+            });
+        }
+    } else {
+        // download firmware from the web
+        dispatch_async(queue, ^{
+            NSLog(@"downloading firmware...");
+            
+            
+            NSLog(@"updating firmware");
+            //[device updateFirmware];
+        });
         
-        
-        NSLog(@"updating firmware");
-        [device updateFirmware];
-    });
+    }
 }
 
 - (IBAction)uploadMembers:(id)sender
@@ -56,8 +76,26 @@
         
         
         NSLog(@"uploading members");
-        [device uploadMembers];
+        NSArray  *members = [NSArray arrayWithObjects:@"0000241450", @"0000246317", @"0011873927",nil];
+        [device uploadMembers: members];
     });
+}
+
+-(void) success:(NSString*)label
+{
+    [progressIndicator setDoubleValue: 100];
+    [statusField setStringValue: label];
+}
+
+-(void) failure:(NSString*)label
+{
+    NSAlert *testAlert = [NSAlert alertWithMessageText:@"OOPS!"
+                                         defaultButton:@"OK"
+                                       alternateButton:nil
+                                           otherButton:nil
+                             informativeTextWithFormat:label];
+    [testAlert runModal];
+    [progressIndicator setHidden: true];
 }
 
 -(void) progress:(double)delta label:(NSString*)label
@@ -69,8 +107,7 @@
         [progressIndicator startAnimation:self];
     }
     if (([progressIndicator doubleValue] + delta) > 100) {
-        [progressIndicator setHidden:true];
-        [statusField setHidden: true];
+        [progressIndicator setDoubleValue: 100];
     } else {
         [statusField setStringValue: label];
         [progressIndicator incrementBy:delta];

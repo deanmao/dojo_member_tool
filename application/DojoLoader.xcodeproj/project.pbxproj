@@ -45,11 +45,11 @@
 		404E328F166A8ACA00687506 /* micronucleus_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = micronucleus_lib.c; sourceTree = "<group>"; };
 		404E3290166A8ACA00687506 /* micronucleus_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = micronucleus_lib.h; sourceTree = "<group>"; };
 		404E3292166A8BC500687506 /* libusb-0.1.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libusb-0.1.4.dylib"; path = "/usr/local/Cellar/libusb-compat/0.1.4/lib/libusb-0.1.4.dylib"; sourceTree = "<absolute>"; };
-		404E3294166A8C4500687506 /* usb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = usb.h; path = "../../../../../usr/local/Cellar/libusb-compat/0.1.4/include/usb.h"; sourceTree = "<group>"; };
 		404E3295166AA75200687506 /* libusb-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libusb-1.0.0.dylib"; path = "/usr/local/Cellar/libusb/1.0.9/lib/libusb-1.0.0.dylib"; sourceTree = "<absolute>"; };
 		404E3298166AAF3100687506 /* DLDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLDevice.h; sourceTree = "<group>"; };
 		404E3299166AAF3100687506 /* DLDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLDevice.m; sourceTree = "<group>"; };
 		404E329B166ABF0900687506 /* DLCallbackProgress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DLCallbackProgress.h; sourceTree = "<group>"; };
+		404E32A1166AC42000687506 /* usb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb.h; sourceTree = "<group>"; };
 		40B563AC166850FA0022756B /* HD Member Device.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HD Member Device.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		40B563B0166850FA0022756B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		40B563B3166850FA0022756B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -138,7 +138,7 @@
 		40B563B6166850FA0022756B /* DojoLoader */ = {
 			isa = PBXGroup;
 			children = (
-				404E3294166A8C4500687506 /* usb.h */,
+				404E32A1166AC42000687506 /* usb.h */,
 				404E328F166A8ACA00687506 /* micronucleus_lib.c */,
 				404E3290166A8ACA00687506 /* micronucleus_lib.h */,
 				40B563C2166850FA0022756B /* DLAppDelegate.h */,

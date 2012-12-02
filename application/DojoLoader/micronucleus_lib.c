@@ -100,13 +100,9 @@ int micronucleus_eraseFlash(micronucleus* deviceHandle, micronucleus_callback pr
     return 0;
 }
 
-int micronucleus_readEeprom(micronucleus* deviceHandle, int address, micronucleus_callback progress) {
-  char buffer[129];
-  int res = usb_control_msg(deviceHandle->device, 0xC0, 3, address, 0, buffer, 128, MICRONUCLEUS_USB_TIMEOUT);
-  if (res > 0) {
-    buffer[res] = '\0';
-    printf("%s", buffer);
-  }
+int micronucleus_readEeprom(micronucleus* deviceHandle, int address, int length, unsigned char *buffer, micronucleus_callback progress) {
+    printf("reading eeprom\n");
+    int res = usb_control_msg(deviceHandle->device, 0xC0, 3, address, length, buffer, 128, MICRONUCLEUS_USB_TIMEOUT);
   return res;
 }
 
@@ -122,13 +118,9 @@ int micronucleus_writeEeprom(micronucleus* deviceHandle, unsigned char* data, in
   res = usb_control_msg(deviceHandle->device,
          USB_ENDPOINT_OUT| USB_TYPE_VENDOR | USB_RECIP_DEVICE,
          4,
-         0, 0,
+         length, 0,
          data, length,
          MICRONUCLEUS_USB_TIMEOUT);
-  
-  printf("> Done!\n");
-  printf("> Done!\n");
-  printf("> Done!\n");
   
   // call progress update callback with completion status
   if (prog) prog(1.0);
