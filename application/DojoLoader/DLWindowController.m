@@ -112,8 +112,6 @@
                 [members addObject:key];
             }
             
-            [members addObject:@"0011873927"];
-            
             NSLog(@"uploading members");
             [device uploadMembers: members];
         }

@@ -32,47 +32,6 @@ static long parseHex(FILE *file_pointer, int num_digits) {
     return strtol(temp, NULL, 16);
 }
 
-static int parseIntelHex(void *str, char* buffer, long *startAddr, long *endAddr) {
-    long address, base, d, segment, i, lineLen, sum;
-    
-    FILE *input;
-    
-    input = fmemopen (str, strlen (str), "r");
-    
-    while (parseUntilColon(input) == ':') {
-        sum = 0;
-        sum += lineLen = parseHex(input, 2);
-        base = address = parseHex(input, 4);
-        sum += address >> 8;
-        sum += address;
-        sum += segment = parseHex(input, 2);  /* segment value? */
-        if (segment != 0) {   /* ignore lines where this byte is not 0 */
-            continue;
-        }
-        
-        for (i = 0; i < lineLen; i++) {
-            d = parseHex(input, 2);
-            buffer[address++] = d;
-            sum += d;
-        }
-        
-        sum += parseHex(input, 2);
-        if ((sum & 0xff) != 0) {
-            printf("> Warning: Checksum error between address 0x%lx and 0x%lx\n", base, address);
-        }
-        
-        if(*startAddr > base) {
-            *startAddr = base;
-        }
-        if(*endAddr < address) {
-            *endAddr = address;
-        }
-    }
-    
-    fclose(input);
-    return 0;
-}
-
 @implementation DLDevice
 
 @synthesize delegate;
@@ -135,18 +94,52 @@ static int parseIntelHex(void *str, char* buffer, long *startAddr, long *endAddr
     return 0;
 }
 
-- (id)updateFirmware:(void*)stream {
-    unsigned char dataBuffer[65536 + 256];
+- (id)updateFirmware:(void*)str {
+    unsigned char buffer[65536 + 256];
     int res;
-    memset(dataBuffer, 0xFF, sizeof(dataBuffer));
+    memset(buffer, 0xFF, sizeof(buffer));
 
     [delegate progress: 10.0 label: @"Reading hex file"];
 
     long startAddress = 1, endAddress = 0;
-    if (parseIntelHex(stream, dataBuffer, &startAddress, &endAddress)) {
-        [delegate failure: @"Error loading or parsing hex file"];
-        return 0;
+    long address, base, d, segment, i, lineLen, sum;
+    
+    FILE *input;
+    
+    input = fmemopen (str, strlen(str), "r");
+    
+    while (parseUntilColon(input) == ':') {
+        sum = 0;
+        sum += lineLen = parseHex(input, 2);
+        base = address = parseHex(input, 4);
+        sum += address >> 8;
+        sum += address;
+        sum += segment = parseHex(input, 2);  /* segment value? */
+        if (segment != 0) {   /* ignore lines where this byte is not 0 */
+            continue;
+        }
+        
+        for (i = 0; i < lineLen; i++) {
+            d = parseHex(input, 2);
+            buffer[address++] = d;
+            sum += d;
+        }
+        
+        sum += parseHex(input, 2);
+        if ((sum & 0xff) != 0) {
+            printf("> Warning: Checksum error between address 0x%lx and 0x%lx, blah: %lx\n", base, address, (sum & 0xff));
+        }
+        
+        if(startAddress > base) {
+            startAddress = base;
+        }
+        if(endAddress < address) {
+            endAddress = address;
+        }
     }
+    
+    fclose(input);
+
     if (startAddress >= endAddress) {
         [delegate failure: @"No data in firmware file"];
         return 0;
@@ -167,7 +160,7 @@ static int parseIntelHex(void *str, char* buffer, long *startAddr, long *endAddr
     }
     
     [delegate progress: 20.0 label: @"Uploading firmware"];
-    res = micronucleus_writeFlash(device, (int) endAddress, dataBuffer, printProgress);
+    res = micronucleus_writeFlash(device, (int) endAddress, buffer, printProgress);
     if (res != 0) {
         [delegate failure: @"An error occured when uploading the firmware"];
         return 0;
