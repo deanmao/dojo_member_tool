@@ -8,6 +8,7 @@
 
 #import "DLWindowController.h"
 #import "micronucleus_lib.h"
+#import "SBJson.h"
 
 @interface DLWindowController ()
 
@@ -49,11 +50,13 @@
             NSArray *urls = [panel URLs];
             
             dispatch_async(queue, ^{
-                NSLog(@"downloading firmware...");
-                
+                NSLog(@"opening firmware from file...");
+                [self progress:10.0 label:@"Reading file"];
                 
                 NSLog(@"updating firmware");
-                //[device updateFirmware];
+                NSData *result = [NSData dataWithContentsOfURL:[urls objectAtIndex:0]];
+                NSString* str = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
+                [device updateFirmware: [str UTF8String]];
             });
         }
     } else {
@@ -61,9 +64,23 @@
         dispatch_async(queue, ^{
             NSLog(@"downloading firmware...");
             
+            [self progress:10.0 label:@"Downloading firmware..."];
+            NSString *url = @"https://github.com/downloads/deanmao/dojo_member_tool/firmware.hex";
+            NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:url]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:20.0];
+            NSError        *error = nil;
+            NSURLResponse  *response = nil;
             
-            NSLog(@"updating firmware");
-            //[device updateFirmware];
+            NSData *result = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&response error:&error];
+            if (error) {
+                [self failure:@"could not connect to server"];
+            } else {
+                [self progress:10.0 label:@"About to update firmware..."];
+                NSLog(@"updating firmware, %ld", [result length]);
+                NSString* str = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
+                [device updateFirmware: [str UTF8String]];
+            }
         });
         
     }
@@ -74,10 +91,32 @@
     dispatch_async(queue, ^{
         NSLog(@"downloading members...");
         
+        [self progress:10.0 label:@"Downloading members..."];
+        NSString *url = @"http://signup.hackerdojo.com/api/rfid?maglock:key=e2842770a39a4";
+        NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:url]
+                                                  cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                              timeoutInterval:20.0];
+        NSError        *error = nil;
+        NSURLResponse  *response = nil;
         
-        NSLog(@"uploading members");
-        NSArray  *members = [NSArray arrayWithObjects:@"0000241450", @"0000246317", @"0011873927",nil];
-        [device uploadMembers: members];
+        NSData *result = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&response error:&error];
+        if (error) {
+            [self failure:@"could not connect to server"];
+        } else {
+            [self progress:10.0 label:@"Parsing JSON..."];
+            SBJsonParser *parser = [[SBJsonParser alloc] init];
+            NSArray *hashes = [parser objectWithData:result];
+            NSMutableArray *members = [[NSMutableArray alloc] init];
+            for(NSDictionary *item in hashes) {
+                NSString *key = [item valueForKey: @"rfid_tag"];
+                [members addObject:key];
+            }
+            
+            [members addObject:@"0011873927"];
+            
+            NSLog(@"uploading members");
+            [device uploadMembers: members];
+        }
     });
 }
 

@@ -105,6 +105,7 @@ static uchar events = 0; // bitmap of events to run
 #define EVENT_WRITE_EEPROM 32
 
 #define EEPROM_PAGE_SIZE 64
+#define SEND_BUFFER_SIZE 128
 
 // controls state of events
 #define fireEvent(event) events |= (event)
@@ -260,10 +261,8 @@ static uchar usbFunctionSetup(uchar data[8]) {
     };
     
     if (rq->bRequest == 0) { // get device info
-        uint8_t localAddr1 = 10;
-        uint8_t localAddr2 = 11;
-        replyBuffer[4] = eeprom_read_byte(&localAddr1);
-        replyBuffer[5] = eeprom_read_byte(&localAddr2); 
+        replyBuffer[4] = eeprom_read_byte(10);
+        replyBuffer[5] = eeprom_read_byte(11); 
         usbMsgPtr = replyBuffer;
         return 6;
         
@@ -279,18 +278,18 @@ static uchar usbFunctionSetup(uchar data[8]) {
     } else if (rq->bRequest == 3) { // Dojo: Read eeprom
       uint16_t startAddress = rq->wValue.word;
       uint16_t endAddress = rq->wIndex.word;
-      uchar length = 128;
-      static uchar dataBuffer[128];
+      uint16_t length = SEND_BUFFER_SIZE;
+      byte dataBuffer[SEND_BUFFER_SIZE];
 
       writeBufferIndex = 0;
       currentWriteCount = 0;
-      writingToEeprom = TRUE;
+      writingToEeprom = FALSE;
       eepromAddress = 0;
 
       if (endAddress == 0) {
         length = 0;
-      } else if ((endAddress - startAddress) > 128) {
-        length = 128;
+      } else if ((endAddress - startAddress) > SEND_BUFFER_SIZE) {
+        length = SEND_BUFFER_SIZE;
       } else {
         length = endAddress - startAddress;
       }
@@ -316,19 +315,17 @@ static uchar usbFunctionSetup(uchar data[8]) {
 }
 
 static inline void startWritingEeprom(void) {
-  uint16_t localAddr = 10;
   writeBufferIndex = 0;
   currentWriteCount = 0;
   writingToEeprom = TRUE;
   eepromAddress = 0;
-  eeprom_write_word(&localAddr, 0);
+  eeprom_write_word(10, 0);
 }
 
 static void writeEeprom(uchar len) {
-  uint16_t localAddr = 10;
   soft_i2c_eeprom_write_bytes(EEPROM_ADDR, eepromAddress, writeBuffer, writeBufferIndex, len);
   eepromAddress = eepromAddress + len;
-  eeprom_write_word(&localAddr, eepromAddress);
+  eeprom_write_word(10, eepromAddress);
 }
 
 // read in a page over usb, and write it in to the flash write buffer

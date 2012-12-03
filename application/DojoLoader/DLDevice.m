@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "fmemopen.h"
 
 static void printProgress(float progress) {
     
@@ -31,15 +32,12 @@ static long parseHex(FILE *file_pointer, int num_digits) {
     return strtol(temp, NULL, 16);
 }
 
-static int parseIntelHex(char *hexfile, char* buffer, long *startAddr, long *endAddr) {
+static int parseIntelHex(void *str, char* buffer, long *startAddr, long *endAddr) {
     long address, base, d, segment, i, lineLen, sum;
+    
     FILE *input;
     
-    input = strcmp(hexfile, "-") == 0 ? stdin : fopen(hexfile, "r");
-    if (input == NULL) {
-        printf("> Error opening %s: %s\n", hexfile, strerror(errno));
-        return 1;
-    }
+    input = fmemopen (str, strlen (str), "r");
     
     while (parseUntilColon(input) == ':') {
         sum = 0;
@@ -60,7 +58,7 @@ static int parseIntelHex(char *hexfile, char* buffer, long *startAddr, long *end
         
         sum += parseHex(input, 2);
         if ((sum & 0xff) != 0) {
-            printf("> Warning: Checksum error between address 0x%.10ld and 0x%.10ld\n", base, address);
+            printf("> Warning: Checksum error between address 0x%lx and 0x%lx\n", base, address);
         }
         
         if(*startAddr > base) {
@@ -85,6 +83,7 @@ static int parseIntelHex(char *hexfile, char* buffer, long *startAddr, long *end
     while (device == NULL) {
         device = micronucleus_connect();
     }
+    NSLog(@"end address = %d", device->data_length);
     return 0;
 }
 
@@ -95,7 +94,7 @@ static int parseIntelHex(char *hexfile, char* buffer, long *startAddr, long *end
 
     [delegate progress: 10.0 label: @"Writing"];
 
-    unsigned char data[2000];
+    unsigned char data[10000];
     int dataIndex = 0;
     for(NSString *key in members) {
         long long k = [key longLongValue];
@@ -121,7 +120,7 @@ static int parseIntelHex(char *hexfile, char* buffer, long *startAddr, long *end
     do {
         unsigned char buffer[128];
         length = micronucleus_readEeprom(device, start, end, buffer, printProgress);
-        for (int i=start; i<(start + length); i++) {
+        for (int i=0; i<length; i++) {
             NSLog(@"reading: %d == %d", buffer[i], data[start + i]);
             if (buffer[i] != data[start + i]) {
                 [delegate failure: @"Verification failed!"];
@@ -136,17 +135,15 @@ static int parseIntelHex(char *hexfile, char* buffer, long *startAddr, long *end
     return 0;
 }
 
-- (id)updateFirmware {
+- (id)updateFirmware:(void*)stream {
     unsigned char dataBuffer[65536 + 256];
     int res;
     memset(dataBuffer, 0xFF, sizeof(dataBuffer));
 
-    [self waitForDevice];
-
     [delegate progress: 10.0 label: @"Reading hex file"];
 
     long startAddress = 1, endAddress = 0;
-    if (parseIntelHex("asdf", dataBuffer, &startAddress, &endAddress)) {
+    if (parseIntelHex(stream, dataBuffer, &startAddress, &endAddress)) {
         [delegate failure: @"Error loading or parsing hex file"];
         return 0;
     }
@@ -154,6 +151,8 @@ static int parseIntelHex(char *hexfile, char* buffer, long *startAddr, long *end
         [delegate failure: @"No data in firmware file"];
         return 0;
     }
+    
+    [self waitForDevice];
     
     if (endAddress > device->flash_size) {
         [delegate failure: @"Firmware is too large to fit on chip"];

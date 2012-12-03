@@ -226,8 +226,8 @@ bool soft_i2c_eeprom_erase(uint8_t deviceAddr, uint16_t writeAddress, uchar leng
 
 // Read more than 1 byte from a device
 // (Optional)
-bool soft_i2c_eeprom_read_bytes(uint8_t deviceAddr, uint16_t readAddress, byte *readBuffer, uint8_t bytestoRead) {
-  uint8_t i;
+bool soft_i2c_eeprom_read_bytes(uint8_t deviceAddr, uint16_t readAddress, byte *readBuffer, uint16_t bytestoRead) {
+  uint16_t i;
   
 	// Issue a start condition, send device address and write direction bit
 	if (!SoftI2cMasterStart((deviceAddr<<1) | I2C_WRITE)) return false;

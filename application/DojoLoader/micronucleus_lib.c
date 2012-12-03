@@ -63,7 +63,7 @@ micronucleus* micronucleus_connect() {
         
         // get nucleus info
         unsigned char buffer[6];
-        int res = usb_control_msg(nucleus->device, 0xC0, 0, 0, 0, buffer, 4, MICRONUCLEUS_USB_TIMEOUT);
+        int res = usb_control_msg(nucleus->device, 0xC0, 0, 0, 0, buffer, 6, MICRONUCLEUS_USB_TIMEOUT);
         assert(res >= 4);
         
         nucleus->flash_size = (buffer[0]<<8) + buffer[1];
@@ -100,9 +100,9 @@ int micronucleus_eraseFlash(micronucleus* deviceHandle, micronucleus_callback pr
     return 0;
 }
 
-int micronucleus_readEeprom(micronucleus* deviceHandle, int address, int length, unsigned char *buffer, micronucleus_callback progress) {
+int micronucleus_readEeprom(micronucleus* deviceHandle, int start, int end, unsigned char *buffer, micronucleus_callback progress) {
     printf("reading eeprom\n");
-    int res = usb_control_msg(deviceHandle->device, 0xC0, 3, address, length, buffer, 128, MICRONUCLEUS_USB_TIMEOUT);
+    int res = usb_control_msg(deviceHandle->device, 0xC0, 3, start, end, buffer, 128, MICRONUCLEUS_USB_TIMEOUT);
   return res;
 }
 

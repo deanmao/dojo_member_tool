@@ -131,13 +131,11 @@ void SoftI2cMasterStop(void) {
 }
 
 bool find(byte *tag, byte length) {
-  byte i;
+  int i;
   byte x = 0;
   int matchedBytes = 0;
-  int bytestoRead = 20; //EEPROM.read(10) + (EEPROM.read(11) << 8);
-  
-  sei();
-  SoftI2cMasterInit();
+  boolean found = false;
+  int bytestoRead = EEPROM.read(10) + (EEPROM.read(11) << 8);
 
   if (!SoftI2cMasterStart((EEPROM_ADDR<<1) | I2C_WRITE)) return false;
   if (!SoftI2cMasterWrite(0)) return false; // MSB
@@ -151,7 +149,7 @@ bool find(byte *tag, byte length) {
     if (((i + 1)%6) == 0 && c == 0) {
       // we are at a boundary, if found is still true, we matched everything
       if (matchedBytes == 5) {
-        break; 
+        found = true;
       } else {
         matchedBytes = 0;
       }
@@ -164,9 +162,8 @@ bool find(byte *tag, byte length) {
     }
   }
   SoftI2cMasterStop();
-  SoftI2cMasterDeInit();
 
-  return matchedBytes == 5;
+  return matchedBytes == 5 || found;
 }
 
 // pins 3 & 4 are green & red leds
@@ -174,6 +171,8 @@ byte green = 3;
 byte red = 4;
 
 void setup() {
+  sei();
+  SoftI2cMasterInit();
   rfid.begin(9600);
   pinMode(green, OUTPUT); 
   pinMode(red, OUTPUT); 
@@ -243,10 +242,13 @@ void loop() {
       else if (readByte == 3) {
         byte byteTag[6];
         byte i, t;
+        byte last = dataIndex-4;
+        readingRfid = false;
+        dataIndex = 0;
         for(i=0; i<6; i++) {
           byteTag[i] = 0; 
         }
-        for(i=0, t=3; i<dataIndex-4; i+=2, t--) {
+        for(i=0, t=3; i<last; i+=2, t--) {
           if (t >= 0) byteTag[t] = (data[i]<<4) + data[i+1];
         }
         for(i=0; i<16; i++) {
@@ -264,8 +266,6 @@ void loop() {
           delay(1000);
           digitalWrite(red, LOW);
         }
-        dataIndex = 0;
-        readingRfid = false;
       }
     }
   }

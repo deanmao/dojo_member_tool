@@ -11,7 +11,7 @@
 @property (nonatomic) id delegate;
 
 - uploadMembers:(NSArray*)members;
-- updateFirmware;
+- updateFirmware:(void*)string;
 - waitForDevice;
 
 @end
