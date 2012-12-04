@@ -14,14 +14,17 @@
 {
     IBOutlet NSButton *updateFirmwareButton;
     IBOutlet NSButton *uploadMembersButton;
+    IBOutlet NSButton *cancelProgressButton;
     IBOutlet NSButton *manualCheckBox;
     IBOutlet NSTextField *statusField;
     IBOutlet NSProgressIndicator *progressIndicator;
     DLDevice *device;
     dispatch_queue_t queue;
+    BOOL cancelled;
 }
 
 - (IBAction)uploadMembers:(id)sender;
 - (IBAction)updateFirmware:(id)sender;
+- (IBAction)cancelProgress:(id)sender;
 
 @end

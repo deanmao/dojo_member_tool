@@ -12,4 +12,5 @@
 -(void) progress:(double)delta label:(NSString*)label;
 -(void) success:(NSString *)label;
 -(void) failure:(NSString *)label;
+-(BOOL) cancelled;
 @end

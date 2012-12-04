@@ -36,11 +36,25 @@
     [progressIndicator setHidden:true];
     [progressIndicator setIndeterminate:false];
     [statusField setHidden: true];
+    [cancelProgressButton setImage: [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate]];
+    [cancelProgressButton setHidden:true];
+    cancelled = NO;
 }
 
+- (IBAction)cancelProgress:(id)sender
+{
+    cancelled = YES;
+    [self success: @"Cancelled"];
+}
+
+- (BOOL) cancelled
+{
+    return cancelled;
+}
 
 - (IBAction)updateFirmware:(id)sender
 {
+    cancelled = NO;
     if ([manualCheckBox state] == NSOnState) {
         // show open file dialog
         NSOpenPanel *panel	= [NSOpenPanel openPanel];
@@ -88,6 +102,7 @@
 
 - (IBAction)uploadMembers:(id)sender
 {
+    cancelled = NO;
     dispatch_async(queue, ^{
         NSLog(@"downloading members...");
         
@@ -120,8 +135,13 @@
 
 -(void) success:(NSString*)label
 {
-    [progressIndicator setDoubleValue: 100];
-    [statusField setStringValue: label];
+    [progressIndicator setDoubleValue: 0];
+    [statusField setStringValue: @""];
+    [progressIndicator setHidden: true];
+    [cancelProgressButton setHidden: true];
+    [statusField setHidden: true];
+    [updateFirmwareButton setEnabled: true];
+    [uploadMembersButton setEnabled: true];
 }
 
 -(void) failure:(NSString*)label
@@ -133,13 +153,21 @@
                              informativeTextWithFormat:label];
     [testAlert runModal];
     [progressIndicator setHidden: true];
+    [cancelProgressButton setHidden: true];
+    [updateFirmwareButton setEnabled: true];
+    [uploadMembersButton setEnabled: true];
 }
 
 -(void) progress:(double)delta label:(NSString*)label
 {
+    [updateFirmwareButton setEnabled: false];
+    [uploadMembersButton setEnabled: false];
     if ([statusField isHidden]) {
-        [progressIndicator setHidden: false];
         [statusField setHidden: false];
+    }
+    if ([progressIndicator isHidden]) {
+        [cancelProgressButton setHidden: false];
+        [progressIndicator setHidden: false];
         [progressIndicator setDoubleValue: 0];
         [progressIndicator startAnimation:self];
     }

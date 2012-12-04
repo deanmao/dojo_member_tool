@@ -41,6 +41,9 @@ static long parseHex(FILE *file_pointer, int num_digits) {
     device = NULL;
     while (device == NULL) {
         device = micronucleus_connect();
+        if ([delegate cancelled]) {
+            return 0;
+        }
     }
     NSLog(@"end address = %d", device->data_length);
     return 0;
@@ -51,6 +54,9 @@ static long parseHex(FILE *file_pointer, int num_digits) {
 
     [self waitForDevice];
 
+    if ([delegate cancelled]) {
+        return 0;
+    }
     [delegate progress: 10.0 label: @"Writing"];
 
     unsigned char data[10000];
@@ -67,6 +73,9 @@ static long parseHex(FILE *file_pointer, int num_digits) {
         }
         data[dataIndex++] = 0;
         NSLog(@"writing: %d", 0);
+        if ([delegate cancelled]) {
+            return 0;
+        }
     }
     
     micronucleus_writeEeprom(device, data, dataIndex, printProgress);
@@ -78,6 +87,9 @@ static long parseHex(FILE *file_pointer, int num_digits) {
     int start = 0;
     do {
         unsigned char buffer[128];
+        if ([delegate cancelled]) {
+            return 0;
+        }
         length = micronucleus_readEeprom(device, start, end, buffer, printProgress);
         for (int i=0; i<length; i++) {
             NSLog(@"reading: %d == %d", buffer[i], data[start + i]);
@@ -109,6 +121,9 @@ static long parseHex(FILE *file_pointer, int num_digits) {
     input = fmemopen (str, strlen(str), "r");
     
     while (parseUntilColon(input) == ':') {
+        if ([delegate cancelled]) {
+            return 0;
+        }
         sum = 0;
         sum += lineLen = parseHex(input, 2);
         base = address = parseHex(input, 4);
@@ -146,12 +161,17 @@ static long parseHex(FILE *file_pointer, int num_digits) {
     }
     
     [self waitForDevice];
-    
+    if ([delegate cancelled]) {
+        return 0;
+    }
     if (endAddress > device->flash_size) {
         [delegate failure: @"Firmware is too large to fit on chip"];
         return 0;
     }
     
+    if ([delegate cancelled]) {
+        return 0;
+    }
     [delegate progress: 20.0 label: @"Erasing memory"];
     res = micronucleus_eraseFlash(device, printProgress);
     if (res != 0) {
@@ -159,6 +179,9 @@ static long parseHex(FILE *file_pointer, int num_digits) {
         return 0;
     }
     
+    if ([delegate cancelled]) {
+        return 0;
+    }
     [delegate progress: 20.0 label: @"Uploading firmware"];
     res = micronucleus_writeFlash(device, (int) endAddress, buffer, printProgress);
     if (res != 0) {
