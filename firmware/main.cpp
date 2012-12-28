@@ -1,17 +1,17 @@
+#include <stdlib.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <avr/sleep.h>
+#include <util/delay.h> 
+#include <SoftwareSerial.h>
 #include <EEPROM.h>
+#include <Arduino.h>
 
 // pins 1 & 2 are used for I2C
 #define TWI_SDA_PIN PB1
 #define TWI_SCL_PIN PB2
 
 #define EEPROM_ADDR 0x50
-
-#include <stdlib.c>
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <avr/sleep.h>
-#include <util/delay.h> 
-#include <SoftwareSerial.h>
 
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
@@ -146,10 +146,11 @@ bool find(byte *tag, byte length) {
     // we compare byte by byte and ensure the length is the right
     // amount
     byte c = SoftI2cMasterRead(i == (bytestoRead-1));
-    if (((i + 1)%6) == 0 && c == 0) {
+    if (((i + 1)%6) == 0) {
       // we are at a boundary, if found is still true, we matched everything
       if (matchedBytes == 5) {
-        found = true;
+        SoftI2cMasterStop();
+        return true;
       } else {
         matchedBytes = 0;
       }
@@ -163,24 +164,12 @@ bool find(byte *tag, byte length) {
   }
   SoftI2cMasterStop();
 
-  return matchedBytes == 5 || found;
+  return false;
 }
 
 // pins 3 & 4 are green & red leds
-byte green = 3;
-byte red = 4;
-
-void setup() {
-  sei();
-  SoftI2cMasterInit();
-  rfid.begin(9600);
-  pinMode(green, OUTPUT); 
-  pinMode(red, OUTPUT); 
-  digitalWrite(green, HIGH);
-  digitalWrite(red, HIGH);
-  delay(100);
-  clearLed();
-}
+byte green = 4;
+byte red = 3;
 
 void clearLed() {
   digitalWrite(green, LOW);
@@ -203,7 +192,7 @@ void clearLed() {
 
 //void loop() {
 //  while(rfid.available()) {
-//    byte readByte = rfid.read();
+//    byte readByte = rfid.read() - 64;
 //    data[dataIndex] = readByte;
 //    dataIndex++;
 //    if (dataIndex == 14) {
@@ -217,57 +206,77 @@ void clearLed() {
 //}
 
 void loop() {
-  while(rfid.available()) {
-    char readByte = rfid.read() % 128;
-    
-    if (readByte == 2) {
-      readingRfid = true;
-    }
 
-    if( readingRfid ){
-      if (readByte != 2 && readByte != 3 && dataIndex < 16) {
-        if (dataIndex > 1) {
-          // the data that comes from the rfid reader is actually ascii
-          // text, so we have to convert the ascii into normal hex
-          byte b = readByte - 48;
-          if (b > 9) {
-            b = b - 7;
+}
+
+int __attribute__((noreturn)) main(void) {
+  sei();
+  SoftI2cMasterInit();
+  rfid.begin(9600);
+  pinMode(green, OUTPUT); 
+  pinMode(red, OUTPUT); 
+  for(byte i=0; i<5; i++) {
+    digitalWrite(green, HIGH);
+    digitalWrite(red, LOW);
+    delay(80);
+    digitalWrite(green, LOW);
+    digitalWrite(red, HIGH);
+    delay(80);
+  }
+  clearLed();
+
+  while(1) {
+    while(rfid.available()) {
+      byte readByte = rfid.read();
+
+      if (readByte == 2) {
+        readingRfid = true;
+      }
+
+      if( readingRfid ){
+        if (readByte != 2 && readByte != 3 && dataIndex < 16) {
+          if (dataIndex > 1) {
+            // the data that comes from the rfid reader is actually ascii
+            // text, so we have to convert the ascii into normal hex
+            byte b = readByte - 112;
+            if (b > 9) {
+              b = b - 7;
+            }
+            // it is dataIndex-2 because the second byte is where
+            // the actual number starts
+            data[dataIndex-2] = b;
           }
-          // it is dataIndex-2 because the second byte is where
-          // the actual number starts
-          data[dataIndex-2] = b;
-        }
-        dataIndex++;
-      } 
-      else if (readByte == 3) {
-        byte byteTag[6];
-        byte i, t;
-        byte last = dataIndex-4;
-        readingRfid = false;
-        dataIndex = 0;
-        for(i=0; i<6; i++) {
-          byteTag[i] = 0; 
-        }
-        for(i=0, t=3; i<last; i+=2, t--) {
-          if (t >= 0) byteTag[t] = (data[i]<<4) + data[i+1];
-        }
-        for(i=0; i<16; i++) {
-          data[i] = 0;
-        }
-        if (find(byteTag, t)) {
-          clearLed();
-          digitalWrite(green, HIGH);
-          delay(1000);
-          digitalWrite(green, LOW);
+          dataIndex++;
         } 
-        else {
-          clearLed();
-          digitalWrite(red, HIGH);
-          delay(1000);
-          digitalWrite(red, LOW);
+        else if (readByte == 3) {
+          byte byteTag[6];
+          byte i, t;
+          byte last = dataIndex-4;
+          readingRfid = false;
+          dataIndex = 0;
+          for(i=0; i<6; i++) {
+            byteTag[i] = 0; 
+          }
+          for(i=0, t=3; i<last; i+=2, t--) {
+            if (t >= 0) byteTag[t] = (data[i]<<4) + data[i+1];
+          }
+          for(i=0; i<16; i++) {
+            data[i] = 0;
+          }
+          if (find(byteTag, t)) {
+            clearLed();
+            digitalWrite(green, HIGH);
+            delay(1000);
+            digitalWrite(green, LOW);
+          } 
+          else {
+            clearLed();
+            digitalWrite(red, HIGH);
+            delay(1000);
+            digitalWrite(red, LOW);
+          }
         }
       }
     }
   }
 }
-

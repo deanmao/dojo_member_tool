@@ -126,7 +126,7 @@
                 NSString *key = [item valueForKey: @"rfid_tag"];
                 [members addObject:key];
             }
-            
+            [members addObject: @"0011873927"];
             NSLog(@"uploading members");
             [device uploadMembers: members];
         }
@@ -135,6 +135,16 @@
 
 -(void) success:(NSString*)label
 {
+    [progressIndicator setDoubleValue: 100];
+    [statusField setStringValue: label];
+    if (!cancelled) {
+        NSAlert *testAlert = [NSAlert alertWithMessageText:@"Success!"
+                                             defaultButton:@"OK"
+                                           alternateButton:nil
+                                               otherButton:nil
+                                 informativeTextWithFormat:label];
+        [testAlert runModal];
+    }
     [progressIndicator setDoubleValue: 0];
     [statusField setStringValue: @""];
     [progressIndicator setHidden: true];

@@ -16,3 +16,8 @@ profile
 *.moved-aside
 DerivedData
 .idea/
+*.hex
+*.bin
+*.map
+*.o
+*.c.lst
